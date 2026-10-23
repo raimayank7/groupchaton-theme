@@ -402,9 +402,10 @@
   function openFeedback(mode, quote) {
     if (!hasCF) { location.href = '/p/contact-us.html'; return; }
     if (!fbSheet) fbSheet = makeSheet('feedback', '');
-    var report = mode === 'report';
-    $('.sheet-head h2', fbSheet).textContent = report ? 'Report a mistake' : 'Request a novel';
-    fbSheet.setAttribute('aria-label', report ? 'Report a mistake' : 'Request a novel');
+    var report = mode === 'report', isTool = mode === 'tool';
+    var heading = report ? 'Report a mistake' : isTool ? 'Suggest a tool' : 'Request a novel';
+    $('.sheet-head h2', fbSheet).textContent = heading;
+    fbSheet.setAttribute('aria-label', heading);
     var b = $('.sheet-body', fbSheet);
     b.innerHTML = '';
     var me = store.get('gco-contact', {});
@@ -429,12 +430,14 @@
       f.fix = el('textarea', { rows: '3', maxlength: '800', placeholder: 'How it should read, or what is wrong' });
       form.appendChild(field('What should it say?', f.fix));
     } else {
-      f.novel = el('input', { type: 'text', maxlength: '200', placeholder: 'e.g. Omniscient Reader', required: 'required' });
-      form.appendChild(field('Novel name', f.novel));
-      f.link = el('input', { type: 'text', maxlength: '300', placeholder: 'Korean title, other names or a link' });
-      form.appendChild(field('Other names or link (optional)', f.link));
-      f.note = el('textarea', { rows: '3', maxlength: '800', placeholder: 'Why should we pick it up?' });
-      form.appendChild(field('Anything else? (optional)', f.note));
+      f.novel = el('input', { type: 'text', maxlength: '200', required: 'required', placeholder: isTool ? 'e.g. PDF to Word converter' : 'e.g. Omniscient Reader' });
+      form.appendChild(field(isTool ? 'Which tool would help you?' : 'Novel name', f.novel));
+      if (!isTool) {
+        f.link = el('input', { type: 'text', maxlength: '300', placeholder: 'Korean title, other names or a link' });
+        form.appendChild(field('Other names or link (optional)', f.link));
+      }
+      f.note = el('textarea', { rows: '3', maxlength: '800', placeholder: isTool ? 'What should it do? Any site you use for it now?' : 'Why should we pick it up?' });
+      form.appendChild(field(isTool ? 'Details (optional)' : 'Anything else? (optional)', f.note));
     }
     f.name = el('input', { type: 'text', maxlength: '80', autocomplete: 'name' });
     f.name.value = me.name || '';
@@ -442,7 +445,7 @@
     f.email.value = me.email || '';
     form.appendChild(el('div', { 'class': 'fb-row' }, [field('Your name (optional)', f.name), field('Your email', f.email)]));
     form.appendChild(el('p', { 'class': 'fb-note', text: 'We only use your email to reply to you.' }));
-    var btn = el('button', { type: 'submit', 'class': 'btn btn-primary fb-send', text: report ? 'Send report' : 'Send request' });
+    var btn = el('button', { type: 'submit', 'class': 'btn btn-primary fb-send', text: report ? 'Send report' : isTool ? 'Send suggestion' : 'Send request' });
     var status = el('p', { 'class': 'fb-status', role: 'status', 'aria-live': 'polite' });
     form.appendChild(btn);
     form.appendChild(status);
@@ -460,8 +463,10 @@
         var kind = ($('input[name="kind"]:checked', form) || {}).value || 'Other';
         lines = ['[Report] ' + kind, 'Where: ' + where, '', 'Text: ' + (f.quote.value.trim() || '-'), '', 'Should be: ' + (f.fix.value.trim() || '-')];
       } else {
-        if (!f.novel.value.trim()) return fail('Add the novel’s name.', f.novel);
-        lines = ['[Novel request] ' + f.novel.value.trim(), 'Other names / link: ' + (f.link.value.trim() || '-'), '', 'Note: ' + (f.note.value.trim() || '-')];
+        if (!f.novel.value.trim()) return fail(isTool ? 'Tell us which tool you need.' : 'Add the novel’s name.', f.novel);
+        lines = isTool
+          ? ['[Tool idea] ' + f.novel.value.trim(), 'From: ' + location.href, '', 'Details: ' + (f.note.value.trim() || '-')]
+          : ['[Novel request] ' + f.novel.value.trim(), 'Other names / link: ' + (f.link.value.trim() || '-'), '', 'Note: ' + (f.note.value.trim() || '-')];
       }
       var email = f.email.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail('Add a valid email so we can reply.', f.email);
@@ -483,7 +488,7 @@
         if (ok) {
           done();
           status.className = 'fb-status is-ok';
-          status.textContent = report ? 'Thanks! We’ll fix it soon.' : 'Thanks! Your request is in.';
+          status.textContent = report ? 'Thanks! We’ll fix it soon.' : isTool ? 'Thanks! We’ll look at adding it.' : 'Thanks! Your request is in.';
           if (f.quote) f.quote.value = '';
           if (f.fix) f.fix.value = '';
           setTimeout(closeSheets, 1800);
@@ -509,7 +514,10 @@
     if (!t || !hasCF) return;
     e.preventDefault();
     if (nav) nav.classList.remove('is-open');
-    openFeedback(t.getAttribute('data-feedback'));
+    var mode = t.getAttribute('data-feedback');
+    // on the tool pages, "Tell us" suggests a tool rather than a novel
+    if (mode === 'request' && t.closest('[data-gco-tool]')) mode = 'tool';
+    openFeedback(mode);
   });
 
   /* select text in a chapter → "Report typo" button */
