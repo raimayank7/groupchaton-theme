@@ -1,0 +1,60 @@
+{
+  "_help": "One entry per book. 'match' is the chapter URL path pattern (a regular expression). Chapters are put in order by the number in their title ('Chapter 12 ...'), then side stories by the number in their URL. Edit titles, covers or summaries here; scripts/build_series.py fills in the chapter lists.",
+  "series": [
+    {
+      "id": "tcf1",
+      "short": "TCF",
+      "title": "Trash of the Count's Family",
+      "part": "Part I",
+      "index": "/2024/10/LCF.html",
+      "match": "^/\\d{4}/\\d{2}/v1(c|ss)\\d+(_\\d+)?\\.html$",
+      "cover": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhnzFo46xEDohLVqs1ZkY6djMljCttjjdX0uNxUjPHzmfY4DO3HPgaT2ah7_5eceeBKyBp32DUkYtrf9KVrQKjhPIUY5dIY55meCO_oQ9a3dGvA9EAFSzpbG_8M3XfTUib3FYLacwIyjKz7mxpouoHkWJVQpaSVXScsl5cJuQIas6mWgWvb43a9iGo73UMU/s1600/817effca901280ec47392fdc9c035179.jpg",
+      "alt": "Lout of the Count's Family, LCF, 백작가의 망나니가 되었다",
+      "genres": ["Fantasy", "Reincarnation", "Dragons", "Magic", "Comedy"]
+    },
+    {
+      "id": "tcf2",
+      "short": "TCF",
+      "title": "Trash of the Count's Family",
+      "part": "Part II",
+      "index": "/2024/11/lcf.html",
+      "match": "^/\\d{4}/\\d{2}/v2(c|ss)\\d+(_\\d+)?\\.html$",
+      "cover": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhD7mLkVCNTneu0Wryi082mRDYUiTmBVBZF7HXKcAVmdwA4GpOyVFgEUbeAByCmmdvH8DkmWOwD9UdTm5hFzX_2SZKEZbJozI8Ui45IvJbYXDGxqaf-EU2aiMUguIjmv8EJ3gHKTzM1MSxsJHowDg72KCU_QiiIDUb-q1-XByIzTb6_Pk_SS4XDOrIBxyIk/s1600/image.webp",
+      "alt": "The Laws of the Hunt, Lout of the Count's Family, 백작가의 망나니가 되었다",
+      "genres": ["Fantasy", "Reincarnation", "Dragons", "Demons", "Dimensions"]
+    },
+    {
+      "id": "rags",
+      "short": "RAGS",
+      "title": "The Reincarnated Assassin is a Genius Swordsman",
+      "part": "",
+      "index": "/2025/01/RAGS.html",
+      "match": "^/\\d{4}/\\d{2}/rags\\d+(_\\d+)?\\.html$",
+      "cover": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgULjdqlOLEVH0zZb4OGWGNd7gOxvoJFjFeaCB1NKiHgtUDvvy0WA5qI-GNDtRwIAW44ges4xFhdmbTIORCQs7NGzTwpnAlixgNkRToxgb6zMOsXv71bMjg-M2jAF2lqLTsAtnslSJNDOZXqeKeRtI7Ef5qvhPzCDiut-BjY54dfm75kzdN0zrIkh15xruE/s1600/The-Reincarnated-Assassin-is-a-Genius-Swordsman.png",
+      "alt": "The Reincarnated Assassin is a Swordmaster, 환생한 암살자는 검술 천재",
+      "genres": ["Martial Arts", "Fantasy", "Reincarnation", "Assassin", "Genius"]
+    },
+    {
+      "id": "fst",
+      "short": "FST",
+      "title": "Entomologist In Sichuan Tang Clan",
+      "part": "",
+      "index": "/2025/01/FST.html",
+      "match": "^/\\d{4}/\\d{2}/f\\d+c\\d+(_\\d+)?\\.html$",
+      "cover": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEipVgYC2MhNFt_luxqYeMSXfQpqZ1cfFur8ybVyc5Hm_VLVY59luuCkA47C9UkPMy_V5kGyQdl4962DmFmSLiQrlH2AJbDhZc1c72gKCMdYSp0BbMfG-nrEiJ-GAUWD7uybcumou8AaWxU_ImcBrMGz-sQDB4VYhS5DBr6q0EyO4M9VqFtmudM4R6zLK3M6/s1600/entologist-081124-1008.webp",
+      "alt": "Fabre in Sichuan's Tang Family, 파브르 in 사천당가",
+      "genres": ["Murim", "Martial Arts", "Comedy", "Pets", "Reincarnation"]
+    },
+    {
+      "id": "chd",
+      "short": "CHD",
+      "title": "Chronicles of the Heavenly Demon",
+      "part": "",
+      "index": "/2024/06/CHD.html",
+      "match": "^/\\d{4}/\\d{2}/chd\\d+(_\\d+)?\\.html$",
+      "cover": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDSmv1FQk7MZsUn18MM43rtyU4Dk8NWj-CoqDR9ujroDPrPmF52lZ_AjvjMkTqiz98gCbFxsP9sxLYaVZQFXT2DLBQlRFafaUfQ8Au-4OuxV6L4dmjviOgE75Nkzw-ZJ3UUKnGUBqfOUKVOTyLuQBxw4NWyqLUWx0n9jFxHQyp31W1SaZURVWmFvdmKIVv/s1600/98792fb8-1b41-4bbc-934a-c72c921995b0_z.webp",
+      "alt": "Heavenly Demon Reborn!, Divine Astonishment, 신마경천기",
+      "genres": ["Murim", "Wuxia", "Revenge", "Cultivation", "Martial Arts"]
+    }
+  ]
+}

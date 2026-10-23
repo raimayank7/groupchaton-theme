@@ -1,0 +1,5 @@
+# Personal, site-specific files: kept on this computer only.
+# The public theme is blogger/theme.template.xml (rebuild it with scripts/make-theme-template.ps1).
+blogger/theme.xml
+SETUP-GUIDE.html
+__pycache__/
