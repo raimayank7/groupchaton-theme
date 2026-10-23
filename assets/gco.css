@@ -376,6 +376,8 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .gco-page .page-card b{display:block;margin-bottom:4px}
 .gco-page .page-btns{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 14px}
 .gco-page .page-btns a{text-decoration:none}
+.post-body .gco-page a.btn{color:var(--ink);text-decoration:none}
+.post-body .gco-page a.btn-primary{color:var(--accent-ink)}
 .gco-page .updated{color:var(--muted);font-size:14px}
 /* the Contact page form (its ContactForm987_ ids are what Blogger's sending script looks for) */
 .gco-contact{display:grid;gap:12px;max-width:560px;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
