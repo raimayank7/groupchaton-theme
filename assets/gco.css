@@ -380,7 +380,8 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .post-body .gco-page a.btn-primary{color:var(--accent-ink)}
 .gco-page .updated{color:var(--muted);font-size:14px}
 /* the Contact page form (its ContactForm987_ ids are what Blogger's sending script looks for) */
-.gco-contact{display:grid;gap:12px;max-width:560px;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
+.gco-contact p:empty{display:none}
+.gco-contact{display:grid;gap:12px;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--surface)}
 .gco-contact label{display:grid;gap:6px;font:600 14px var(--ui)}
 .gco-contact input[type='text'],.gco-contact textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px/1.45 var(--ui);box-sizing:border-box}
 .gco-contact input:focus,.gco-contact textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -447,6 +448,7 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 /* ---------- Contact page form (its markup is in the page itself, from the old theme) ---------- */
 .contact-src,.cf-proxy{display:none!important}
 .post-body .contact-form-widget{max-width:560px;font-family:var(--ui)}
+.post-body .gco-page .contact-form-widget{max-width:none}
 .post-body .contact-form-widget .uk-margin{margin:0 0 12px}
 .post-body .contact-form-widget .uk-form-icon{display:none}
 .post-body .contact-form-widget input[type='text'],.post-body .contact-form-widget textarea{display:block;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px/1.45 var(--ui)}
