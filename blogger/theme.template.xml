@@ -353,9 +353,7 @@ window.GCO = {
   disqus: '',   /* Disqus shortname: keeps the old comment threads */
   /* EDIT: message at the end of the newest chapter ({novel} = the novel's name) */
   caughtUp: 'Sorry for the long break since the last chapter. New chapters of {novel} are coming soon!',
-  alertsUrl: 'https://whatsapp.com/channel/YOUR-CHANNEL',  /* "Get new-chapter alerts" button */
-  /* EDIT: TinyURL API key for the URL Shortener tool (tinyurl.com → Account → API). Kept here, not on GitHub. */
-  tinyurlKey: ''
+  alertsUrl: 'https://whatsapp.com/channel/YOUR-CHANNEL'   /* "Get new-chapter alerts" button */
 };
 //]]>
 </script>
