@@ -267,23 +267,30 @@ body#layout .section{margin:0 0 12px}
   </div>
 </footer>
 
-<!-- Contact form gadget: shown on the Contact page. Edit it in Blogger: Layout. -->
-<b:section class='contact-src' id='contact-src' name='Contact form (shown on the Contact page)' showaddelement='no'>
-  <b:widget id='ContactForm1' locked='false' title='Contact form' type='ContactForm' version='2' visible='true'>
-    <b:includable id='main'>
-      <div class='contact-form-widget'>
-        <form name='contact-form'>
-          <label class='field'><span>Your name</span><input class='contact-form-name' expr:id='data:widget.instanceId + &quot;_contact-form-name&quot;' name='name' type='text' value=''/></label>
-          <label class='field'><span>Email <small>required</small></span><input class='contact-form-email' expr:id='data:widget.instanceId + &quot;_contact-form-email&quot;' name='email' type='text' value=''/></label>
-          <label class='field'><span>Message <small>required</small></span><textarea class='contact-form-email-message' expr:id='data:widget.instanceId + &quot;_contact-form-email-message&quot;' name='email-message' rows='5'></textarea></label>
-          <input class='contact-form-button contact-form-button-submit' expr:id='data:widget.instanceId + &quot;_contact-form-submit&quot;' type='button' value='Send message'/>
-          <p class='contact-form-error-message' expr:id='data:widget.instanceId + &quot;_contact-form-error-message&quot;'></p>
-          <p class='contact-form-success-message' expr:id='data:widget.instanceId + &quot;_contact-form-success-message&quot;'></p>
-        </form>
-      </div>
-    </b:includable>
+<!-- Blogger's contact form. The gadget itself is never drawn (cond='false'): it only loads Blogger's
+     sending script, which looks for the ContactForm987_... fields by id. The Contact page has those
+     fields in its own content; every other page gets the hidden copy below, used by the
+     "Report a mistake" and "Request a novel" popups. Don't rename ContactForm987. -->
+<b:section class='contact-src' cond='false' id='contact-src' name='Contact form (hidden)' showaddelement='no'>
+  <b:widget id='ContactForm987' locked='true' title='Contact Form' type='ContactForm' version='2' visible='true'>
+    <b:includable id='main'/>
+    <b:includable id='content'/>
   </b:widget>
 </b:section>
+<b:if cond='data:view.title != &quot;Contact Us&quot;'>
+  <div aria-hidden='true' class='ContactForm cf-proxy' hidden='hidden' id='ContactForm987'>
+    <div class='contact-form-widget'>
+      <form name='contact-form'>
+        <input class='contact-form-name' id='ContactForm987_contact-form-name' name='name' tabindex='-1' type='text' value=''/>
+        <input class='contact-form-email' id='ContactForm987_contact-form-email' name='email' tabindex='-1' type='text' value=''/>
+        <textarea class='contact-form-email-message' id='ContactForm987_contact-form-email-message' name='email-message' tabindex='-1'></textarea>
+        <input class='contact-form-button contact-form-button-submit' id='ContactForm987_contact-form-submit' tabindex='-1' type='button' value='Send'/>
+        <p class='contact-form-error-message' id='ContactForm987_contact-form-error-message'></p>
+        <p class='contact-form-success-message' id='ContactForm987_contact-form-success-message'></p>
+      </form>
+    </div>
+  </div>
+</b:if>
 
 <div aria-live='polite' class='toast' id='toast' role='status'/>
 

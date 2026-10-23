@@ -358,13 +358,18 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}
 .footer-bottom p{margin:0}
 
-/* ---------- Gadgets kept for Blogger Layout only ---------- */
-.contact-src{display:none}
-.is-contact .contact-src{display:block;max-width:860px;margin:0 auto 40px;padding:0 16px}
-.contact-form-widget .field{display:block;margin:0 0 12px}
-.contact-form-widget .field span{display:block;font:600 14px var(--ui);margin-bottom:6px}
-.contact-form-widget input[type='text'],.contact-form-widget textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px var(--ui)}
-.contact-form-button{min-height:44px;padding:0 20px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-ink);font:600 15px var(--ui);cursor:pointer}
+/* ---------- Contact page form (its markup is in the page itself, from the old theme) ---------- */
+.contact-src,.cf-proxy{display:none!important}
+.post-body .contact-form-widget{max-width:560px;font-family:var(--ui)}
+.post-body .contact-form-widget .uk-margin{margin:0 0 12px}
+.post-body .contact-form-widget .uk-form-icon{display:none}
+.post-body .contact-form-widget input[type='text'],.post-body .contact-form-widget textarea{display:block;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px/1.45 var(--ui)}
+.post-body .contact-form-widget input:focus,.post-body .contact-form-widget textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+/* the old "Send" button is a styled box with the real (invisible) submit input stretched over it */
+.post-body .contact-form-widget .uk-button{position:relative;display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:600 16px/1 var(--ui);cursor:pointer}
+.post-body .contact-form-widget .uk-button .contact-form-button-submit{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;cursor:pointer}
+.post-body .contact-form-message-box p{margin:10px 0 0;font:14px/1.5 var(--ui)}
+.post-body .contact-form-success-message{color:var(--accent)}
 
 /* ---------- Motion + print ---------- */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
