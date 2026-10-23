@@ -966,10 +966,10 @@
       if (ok) return;
       html.classList.add('no-ads');   // ads blocked: close up the empty ad boxes
       if (Date.now() < store.get('gco-adnote', 0)) return;
-      var bar = el('div', { 'class': 'notice-bar', role: 'note' }, [
-        el('p', { text: C.adblockText || 'We keep ads light so reading stays comfortable. Please allow ads on GroupChatOn: they keep new chapters coming.' }),
+      var bar = el('div', { 'class': 'notice-bar', role: 'note' }, [el('div', { 'class': 'container notice-inner' }, [
+        el('p', { html: C.adblockText || '💚 <b>Ads keep new chapters free.</b> Please allow ads on GroupChatOn.' }),
         el('button', { type: 'button', 'class': 'icon-btn', 'aria-label': 'Close', html: icon(ICON.x), onclick: function () {
-          store.set('gco-adnote', Date.now() + 7 * 864e5); bar.remove(); } })]);
+          store.set('gco-adnote', Date.now() + 7 * 864e5); bar.remove(); } })])]);
       header && header.parentNode.insertBefore(bar, header.nextSibling);
     }, 3500);
   });

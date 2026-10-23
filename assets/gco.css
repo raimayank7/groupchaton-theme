@@ -287,9 +287,13 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .toast > span{flex:1}
 .toast button{border:0;border-radius:10px;padding:8px 12px;background:var(--accent);color:var(--accent-ink);font:600 14px/1 var(--ui);cursor:pointer;white-space:nowrap}
 .toast .toast-x{background:transparent;color:inherit;opacity:.7;padding:8px}
-.notice-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--accent-soft);color:var(--ink);font:14px/1.5 var(--ui);border-bottom:1px solid var(--line)}
-.notice-bar p{margin:0;flex:1}
-.notice-bar .icon-btn{width:34px;height:34px}
+/* ad-blocker note: one slim line, lined up with the page content */
+.notice-bar{background:var(--accent-soft);color:var(--ink);font:13.5px/1.4 var(--ui);border-bottom:1px solid var(--line)}
+.notice-inner{display:flex;align-items:center;gap:10px;min-height:38px;padding-top:4px;padding-bottom:4px}
+.notice-bar p{margin:0;flex:1;min-width:0}
+.notice-bar b{font-weight:600}
+.notice-bar .icon-btn{width:30px;height:30px;border-radius:8px}
+.notice-bar .icon-btn .i{width:16px;height:16px}
 
 /* ---------- Home ---------- */
 .home-hero{padding-top:34px;padding-bottom:8px}
