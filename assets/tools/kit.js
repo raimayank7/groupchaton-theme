@@ -278,7 +278,8 @@
       var canvas = h('canvas'); canvas.width = Math.ceil(vp.width); canvas.height = Math.ceil(vp.height);
       var ctx = canvas.getContext('2d');
       ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-      return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () { return canvas; });
+      // 'print' intent renders without waiting for animation frames, so it keeps going in a background tab
+      return page.render({ canvasContext: ctx, viewport: vp, intent: 'print' }).promise.then(function () { return canvas; });
     });
   };
   T.canvasBlob = function (canvas, type, quality) {

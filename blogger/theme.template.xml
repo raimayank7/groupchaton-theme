@@ -287,6 +287,7 @@ body#layout .section{margin:0 0 12px}
       <nav aria-label='Site'>
         <h4>GroupChatOn</h4>
         <ul>
+          <li><a href='/p/about-us.html'>About us</a></li>
           <li><a href='/p/donations.html'>Support us</a></li>
           <li><a href='https://www.trustpilot.com/review/your-domain.com' rel='noopener' target='_blank'>Review us on Trustpilot</a></li>
           <li><a href='/p/utility-tools.html'>Free tools</a></li>
