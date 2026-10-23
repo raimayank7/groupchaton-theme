@@ -370,7 +370,7 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .gco-page summary::after{content:'+';color:var(--muted);font-weight:400;font-size:20px;line-height:1}
 .gco-page details[open] summary::after{content:'−'}
 .gco-page details > :not(summary){padding:0 16px 14px;margin:0}
-.gco-page .page-note{padding:14px 16px;border-radius:14px;background:var(--surface-2);border-left:4px solid var(--accent)}
+.gco-page .page-note{margin:12px 0;padding:14px 16px;border-radius:14px;background:var(--surface-2);border-left:4px solid var(--accent)}
 .gco-page .page-cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));margin:8px 0 12px}
 .gco-page .page-card{padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
 .gco-page .page-card b{display:block;margin-bottom:4px}
