@@ -95,16 +95,15 @@ html[data-theme='dark'] .logo-dark,html[data-theme='black'] .logo-dark{display:b
 
 /* ---------- Layout ---------- */
 main{display:block;min-height:60vh}
-.page-wrap{padding-top:28px;padding-bottom:56px}
-.has-rail .page-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
-@media (min-width:1240px){
-  .is-chapter .page-wrap{grid-template-columns:minmax(0,1fr) 300px}
-}
-.rail{display:none}
-@media (min-width:1240px){
-  .is-chapter .rail{display:block}
-  .rail-inner{position:sticky;top:calc(var(--header-h) + 20px)}
-}
+.page-wrap{position:relative;padding-top:28px;padding-bottom:56px}
+/* The text column is always centred. The side ad sits in the right-hand margin, and only when
+   gco.js finds the screen wide enough for it beside the reader's chosen page width (.rail-fits);
+   it never takes space from the text. */
+aside.rail{display:none}
+.rail-fits .is-chapter aside.rail{display:block;position:absolute;top:28px;bottom:56px;width:300px;left:calc(50% + var(--rd-measure) / 2 + 48px)}
+.rail-inner{position:sticky;top:calc(var(--header-h) + 20px)}
+/* ads blocked or not loading: no empty "Advertisement" boxes */
+.no-ads .ad-slot{display:none!important}
 
 /* ---------- Reading column ---------- */
 .reading{max-width:var(--rd-measure);margin:0 auto;width:100%}
@@ -113,7 +112,6 @@ main{display:block;min-height:60vh}
 .crumb a:hover{color:var(--accent)}
 .crumb .series-link{color:var(--accent);font-weight:600}
 .post-title{font:700 clamp(26px,4.2vw,36px)/1.2 var(--ui);letter-spacing:-.015em;margin:0 0 12px;color:var(--ink)}
-.is-chapter .post-title{font-family:var(--rd-font);font-weight:700}
 .post-meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font:14px/1.4 var(--ui);color:var(--muted);margin:0 0 18px}
 .post-meta .dot{opacity:.5}
 .chap-nav-top{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;margin:0 0 22px}
@@ -125,11 +123,16 @@ main{display:block;min-height:60vh}
 }
 .chap-nav-top .btn[aria-disabled='true']{opacity:.45;pointer-events:none}
 
-/* the chapter text */
-.post-body{font-family:var(--rd-font);font-size:var(--rd-size);line-height:var(--rd-lh);color:var(--ink);overflow-wrap:break-word;hyphens:manual}
+/* Fonts: the reader's font and size apply to the story text only. Everything else (titles, menus,
+   series pages, tool and policy pages, lists) uses the site font, whatever fonts old posts set inline. */
+.post-body{font-family:var(--ui);font-size:17px;line-height:1.7;color:var(--ink);overflow-wrap:break-word;hyphens:manual}
+.is-post:not(.is-series) .post-body{font-family:var(--rd-font);font-size:var(--rd-size);line-height:var(--rd-lh)}
+.is-post:not(.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.credits):not(.credits *):not(.ad-slot):not(.ad-slot *){font-family:inherit!important}
+:is(.is-page,.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.uk-icon){font-family:var(--ui)!important}
+.is-series .post-body{font-size:17px;line-height:1.7}
 .is-chapter .post-body p{margin:0 0 var(--rd-para)}
 html[data-align='justify'] .is-chapter .post-body p{text-align:justify;hyphens:auto}
-.post-body h2,.post-body h3,.post-body h4{font-family:var(--ui);line-height:1.3;margin:1.6em 0 .6em}
+.post-body h2,.post-body h3,.post-body h4{line-height:1.3;margin:1.6em 0 .6em}
 .post-body img{border-radius:10px}
 .post-body blockquote{margin:1.2em 0;padding:.2em 0 .2em 1em;border-left:3px solid var(--accent);color:var(--ink-soft)}
 .post-body hr{border:0;border-top:1px solid var(--line);margin:2em 0}
@@ -187,7 +190,7 @@ html[data-align='justify'] .is-chapter .post-body p{text-align:justify;hyphens:a
 .ad-slot iframe{max-width:100%}
 /* unfilled slots collapse (Google allows this); .is-empty is the same for browsers without :has */
 .ad-slot.is-empty,.ad-slot:has(ins[data-ad-status='unfilled']){display:none}
-.rail .ad-slot{margin:0;min-height:600px}
+aside.rail .ad-slot{margin:0;min-height:600px}
 /* phones: content ads run edge to edge on purpose, like a full-width band */
 @media (max-width:600px){
   .ad-slot.ad-top,.ad-slot.ad-end,.ad-slot.in-article,.ad-slot.multiplex{width:auto;max-width:none;margin-left:-16px;margin-right:-16px}
@@ -345,6 +348,41 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .is-page .reading,.is-list .reading{max-width:860px}
 .is-page .post-body{font-family:var(--ui);font-size:16px;line-height:1.7}
 
+/* The pages and series posts carry their own styles from the old theme (white cards, blue and green
+   buttons, serif fonts, light warning boxes). These rules make all of it follow the reader's theme. */
+:root{--font-color:var(--ink);--primary-color:var(--accent);--border-color:var(--line);--border-gradient:linear-gradient(135deg,var(--accent),var(--accent))}
+.is-page .post-body :where(p,li,dt,dd,label,legend,h1,h2,h3,h4,h5,h6,strong,b,em,small,span,td,th,caption,figcaption,blockquote,div,section,article,header,footer,ul,ol):not(button *):not([class*='btn'] *):not([class*='button'] *):not([class*='btn']):not([class*='button']):not([class*='tab']):not(.highlight){color:var(--ink)!important}
+.is-page .post-body .highlight{color:var(--accent)!important}
+.is-page .post-body a:not([class*='btn']):not([class*='button']):not([class*='download']):not([class*='tab']){color:var(--accent)!important}
+/* cards, panels and tool boxes */
+.is-page .post-body :where([class*='container'],[class*='wrapper'],[class*='box'],[class*='card'],[class*='body'],[class*='main'],[class*='panel'],[class*='output'],[class*='result'],[class*='preview'],[class*='info'],[class*='instructions'],[class*='tab-content'],[class*='section'],form,fieldset,table,pre):not([class*='btn']):not([class*='button']):not([class*='progress']):not([class*='warning']):not([class*='error']):not([class*='success']):not([class*='alert']){background-color:var(--surface)!important;border-color:var(--line)!important;box-shadow:none!important}
+.is-page .post-body :where(th,td){border-color:var(--line)!important}
+.is-page .post-body .tab-tools-container{border-image:none!important;border:1px solid var(--line)!important;border-radius:18px}
+/* boxes styled inline in the page (glows, white panels) */
+.is-page .post-body [style*='box-shadow']:not(img):not(iframe){box-shadow:none!important;background-color:var(--surface)!important;border:1px solid var(--line)!important;border-radius:16px}
+.is-page .post-body :is([style*='background-color: #fff'],[style*='background-color:#fff'],[style*='background: #fff'],[style*='background:#fff'],[style*='background-color: white'],[style*='background: white'],[style*='background-color: rgb(255, 255, 255)']){background-color:var(--surface)!important}
+/* fields */
+.is-page .post-body :where(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='button']):not([type='submit']),textarea,select){background-color:var(--bg)!important;color:var(--ink)!important;border:1px solid var(--line)!important;border-radius:12px!important;box-shadow:none!important;max-width:100%}
+.is-page .post-body :where(input,textarea,select):focus{outline:none!important;border-color:var(--accent)!important;box-shadow:0 0 0 3px var(--accent-soft)!important}
+.is-page .post-body ::placeholder{color:var(--muted)!important;opacity:1}
+.is-page .post-body input[type='file']::file-selector-button{margin-right:10px;padding:8px 14px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:600 14px var(--ui);cursor:pointer}
+.is-page .post-body :where(input[type='checkbox'],input[type='radio'],input[type='range']){accent-color:var(--accent)}
+/* buttons (the Utility Tools pills keep their own colours) */
+.is-page .post-body :where(button,input[type='button'],input[type='submit'],[class*='btn'],[class*='button'],a[class*='download']):not(.tool-button):not([class*='tab']):not([class*='container']):not([class*='group']){background:var(--accent)!important;color:var(--accent-ink)!important;border-color:var(--accent)!important;border-radius:999px!important;box-shadow:none!important;text-shadow:none!important}
+.is-page .post-body :where(button,[class*='btn'],[class*='button'],a[class*='download']):not(.tool-button):hover{filter:brightness(1.07)}
+.is-page .post-body :where(button,input,[class*='btn']):disabled{opacity:.55;cursor:not-allowed}
+/* tabs inside tools */
+.is-page .post-body :where(.custom-tab,.tab-button,[class*='-tab']:not([class*='content']):not([class*='tabs']):not([class*='table']):not([class*='container'])){background:var(--surface-2)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:none!important}
+.is-page .post-body :where(.custom-tab.active,.tab-button.active,[class*='-tab'].active){background:var(--accent)!important;color:var(--accent-ink)!important;border-color:var(--accent)!important}
+/* progress bars */
+.is-page .post-body [class*='progress'][class*='container'],.is-page .post-body [class*='progress-bar-container']{background:var(--surface-2)!important}
+.is-page .post-body [class*='progress']:not([class*='container']){background-color:var(--accent)!important}
+/* warning, error and success boxes keep their meaning through a coloured edge */
+.is-page .post-body :where([class*='warning'],[class*='alert'],[class*='error'],[class*='success'],[class*='notice']):not(:empty){background:var(--surface-2)!important;color:var(--ink)!important;border:1px solid var(--line)!important;border-left:4px solid #d97706!important;border-radius:12px;box-shadow:none!important}
+.is-page .post-body :where([class*='error']):not(:empty){border-left-color:#dc2626!important}
+.is-page .post-body :where([class*='success']):not(:empty){border-left-color:var(--accent)!important}
+.is-page .post-body hr{border:0;border-top:1px solid var(--line)}
+
 /* ---------- Footer ---------- */
 .site-footer{margin-top:40px;padding:36px 0 calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--surface);font:14px/1.6 var(--ui);color:var(--muted)}
 .footer-grid{display:grid;gap:26px;grid-template-columns:1fr}
@@ -355,6 +393,14 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 .site-footer a:hover{color:var(--accent)}
 .footer-about p{margin:10px 0 12px;max-width:340px}
 .socials{display:flex;gap:4px;flex-wrap:wrap}
+.follow-title{margin:18px 0 10px!important}
+.follow-list{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px!important}
+.follow-list a{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 6px;border-radius:12px}
+.follow-list a:hover{background:var(--surface-2)}
+.follow-list .fi{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--surface-2);color:var(--ink);flex:none}
+.follow-list a:hover .fi{color:var(--accent)}
+.follow-list b{display:block;font:600 14px/1.25 var(--ui);color:var(--ink)}
+.follow-list small{display:block;font:13px/1.3 var(--ui);color:var(--muted)}
 .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:13px}
 .footer-bottom p{margin:0}
 

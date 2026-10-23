@@ -95,7 +95,14 @@
     }
     var meta = $('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', getComputedStyle(body).backgroundColor);
+    fitRail();
   }
+  // the side ad shows only if it fits in the margin beside the text (300px ad + 48px gap on each side)
+  function fitRail() {
+    var measure = parseInt(WIDTHS[settings.width] || WIDTHS.m, 10);
+    html.classList.toggle('rail-fits', window.innerWidth >= measure + 2 * (300 + 48) + 40);
+  }
+  window.addEventListener('resize', fitRail);
   function saveSettings() { store.set('gco-reader', settings); applySettings(); syncSettingsUI(); }
   if (darkMQ && darkMQ.addEventListener) darkMQ.addEventListener('change', function () { if (settings.theme === 'auto') applySettings(); });
   applySettings();
@@ -627,7 +634,7 @@
 
   /* ---------- chapter page ---------- */
   function chapterPage(s) {
-    body.classList.add('is-chapter', 'has-rail');
+    body.classList.add('is-chapter');
     cleanPostBody(postBody);
     $$(':scope > .button-container, :scope > .separator', postBody).forEach(function (n) { n.parentNode.removeChild(n); });
     var content = $(':scope > .custom-post', postBody) || postBody;
@@ -956,8 +963,9 @@
     if (!C.adClient) return;
     setTimeout(function () {
       var ok = window.adsbygoogle && window.adsbygoogle.loaded;
-      var until = store.get('gco-adnote', 0);
-      if (ok || Date.now() < until) return;
+      if (ok) return;
+      html.classList.add('no-ads');   // ads blocked: close up the empty ad boxes
+      if (Date.now() < store.get('gco-adnote', 0)) return;
       var bar = el('div', { 'class': 'notice-bar', role: 'note' }, [
         el('p', { text: C.adblockText || 'We keep ads light so reading stays comfortable. Please allow ads on GroupChatOn: they keep new chapters coming.' }),
         el('button', { type: 'button', 'class': 'icon-btn', 'aria-label': 'Close', html: icon(ICON.x), onclick: function () {
