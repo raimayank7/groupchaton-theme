@@ -2,11 +2,11 @@
    Designed & Developed by Nivesh Sahayak. See LICENSE. */
 GCOTools.register('whatsapp-direct', function (spot, T) {
   var h = T.h, status = T.status();
-  var codes = [['91', '🇮🇳 India +91'], ['92', '🇵🇰 Pakistan +92'], ['880', '🇧🇩 Bangladesh +880'], ['977', '🇳🇵 Nepal +977'], ['94', '🇱🇰 Sri Lanka +94'],
-    ['971', '🇦🇪 UAE +971'], ['966', '🇸🇦 Saudi Arabia +966'], ['974', '🇶🇦 Qatar +974'], ['965', '🇰🇼 Kuwait +965'], ['968', '🇴🇲 Oman +968'], ['973', '🇧🇭 Bahrain +973'],
-    ['1', '🇺🇸 USA / 🇨🇦 Canada +1'], ['44', '🇬🇧 UK +44'], ['61', '🇦🇺 Australia +61'], ['64', '🇳🇿 New Zealand +64'], ['65', '🇸🇬 Singapore +65'], ['60', '🇲🇾 Malaysia +60'],
-    ['62', '🇮🇩 Indonesia +62'], ['63', '🇵🇭 Philippines +63'], ['82', '🇰🇷 South Korea +82'], ['49', '🇩🇪 Germany +49'], ['33', '🇫🇷 France +33'], ['39', '🇮🇹 Italy +39'],
-    ['34', '🇪🇸 Spain +34'], ['55', '🇧🇷 Brazil +55'], ['52', '🇲🇽 Mexico +52'], ['27', '🇿🇦 South Africa +27'], ['234', '🇳🇬 Nigeria +234'], ['254', '🇰🇪 Kenya +254'], ['', 'Other (type full number)']];
+  var codes = [['91', 'India (+91)'], ['92', 'Pakistan (+92)'], ['880', 'Bangladesh (+880)'], ['977', 'Nepal (+977)'], ['94', 'Sri Lanka (+94)'],
+    ['971', 'UAE (+971)'], ['966', 'Saudi Arabia (+966)'], ['974', 'Qatar (+974)'], ['965', 'Kuwait (+965)'], ['968', 'Oman (+968)'], ['973', 'Bahrain (+973)'],
+    ['1', 'USA / Canada (+1)'], ['44', 'UK (+44)'], ['61', 'Australia (+61)'], ['64', 'New Zealand (+64)'], ['65', 'Singapore (+65)'], ['60', 'Malaysia (+60)'],
+    ['62', 'Indonesia (+62)'], ['63', 'Philippines (+63)'], ['82', 'South Korea (+82)'], ['49', 'Germany (+49)'], ['33', 'France (+33)'], ['39', 'Italy (+39)'],
+    ['34', 'Spain (+34)'], ['55', 'Brazil (+55)'], ['52', 'Mexico (+52)'], ['27', 'South Africa (+27)'], ['234', 'Nigeria (+234)'], ['254', 'Kenya (+254)'], ['', 'Other (type full number)']];
   var cc = T.select(codes, T.store.get('wa-cc', '91'));
   var num = h('input', { type: 'tel', inputmode: 'numeric', placeholder: 'Phone number', autocomplete: 'tel-national' });
   var msg = h('textarea', { rows: '4', placeholder: 'Your message (optional)' });

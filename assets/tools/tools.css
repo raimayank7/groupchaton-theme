@@ -9,7 +9,7 @@
 .trow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .tool-app-opts{display:grid;gap:14px}
 .trow-split{justify-content:space-between}
-.tgrid2{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+.tgrid2{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));align-items:start}
 
 /* buttons */
 .tbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:600 15px/1 var(--ui);cursor:pointer;text-decoration:none;transition:filter .15s,transform .1s}
@@ -21,9 +21,10 @@
 .tbtn-wide{width:100%}
 
 /* fields */
-.tfield{display:grid;gap:6px;min-width:0}
+.tfield{display:grid;gap:6px;min-width:0;align-content:start}
 .tfield-label{font:600 13.5px/1.3 var(--ui);color:var(--ink-soft)}
 .tfield small{color:var(--muted);font-size:12.5px}
+.tool-app input[type='text'],.tool-app input[type='url'],.tool-app input[type='number'],.tool-app input[type='search'],.tool-app input[type='tel'],.tool-app select{height:46px}
 .tool-app input[type='text'],.tool-app input[type='url'],.tool-app input[type='number'],.tool-app input[type='search'],.tool-app input[type='tel'],.tool-app select,.tool-app textarea{width:100%;min-height:44px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px/1.45 var(--ui);box-sizing:border-box}
 .tool-app textarea{min-height:160px;resize:vertical}
 .tool-app input:focus,.tool-app select:focus,.tool-app textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -58,6 +59,7 @@
 
 /* status + progress */
 .tstatus-wrap{display:grid;gap:8px}
+.tstatus-wrap:has(> .tprogress[hidden]):has(> .tstatus:empty){display:none}
 .tstatus{margin:0;min-height:1.3em;font:14px/1.45 var(--ui);color:var(--muted)}
 .tstatus.is-ok{color:var(--accent);font-weight:600}
 .tstatus.is-error{color:#dc2626;font-weight:600}
