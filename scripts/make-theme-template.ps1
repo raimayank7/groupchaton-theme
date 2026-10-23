@@ -15,6 +15,7 @@ $rules = @(
   @("(top|inArticle|end|rail|multiplex|home): '\d+'", '$1: '''''),
   @("disqus: '[^']*'", "disqus: ''"),
   # social profiles and support links
+  @('https://www\.instagram\.com/[^''"/\s]+/?', 'https://www.instagram.com/YOUR-PAGE'),
   @('https://www\.facebook\.com/[^''"/\s]+/?', 'https://www.facebook.com/YOUR-PAGE'),
   @('https://www\.x\.com/[^''"/\s]+/?', 'https://www.x.com/YOUR-NAME'),
   @('https://(www\.)?whatsapp\.com/channel/[A-Za-z0-9]+', 'https://whatsapp.com/channel/YOUR-CHANNEL'),

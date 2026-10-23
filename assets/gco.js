@@ -536,6 +536,30 @@
   var article = $('article.post');
   var postBody = article && $('.post-body', article);
 
+  /* ---------- what the Blogger template leaves to this script (see the note in theme.xml) ---------- */
+  // comments box on posts: same Disqus thread ids as the old theme (post url + post id)
+  if (article && postBody && body.classList.contains('is-post') && C.disqus) {
+    article.appendChild(el('div', { 'class': 'comments', id: 'comments', 'data-id': (postBody.id || '').replace('post-body-', ''),
+      'data-url': location.origin + PATH }, [
+      el('button', { type: 'button', 'class': 'btn', 'data-load-comments': '1', text: '💬 Show comments' }),
+      el('div', { id: 'disqus_thread' })]));
+    setupComments();
+  }
+  // label and search pages: title from the address
+  var listTitle = $('.list-title');
+  if (listTitle && body.classList.contains('is-list')) {
+    var labelM = PATH.match(/^\/search\/label\/(.+)$/), q = new URLSearchParams(location.search).get('q');
+    listTitle.textContent = labelM ? decodeURIComponent(labelM[1]).replace(/\+/g, ' ') : q ? 'Results for “' + q + '”' : 'All chapters';
+    listTitle.hidden = false;
+  }
+  // list thumbnails from each post's featured image, cropped to a book-cover shape
+  $$('.post-row[data-img]').forEach(function (row) {
+    var src = row.getAttribute('data-img')
+      .replace(/\/(s|w)\d+[^/]*\/(?=[^/]+$)/, '/w208-h288-p-k-no-nu/')
+      .replace(/=(s|w)\d+[^/]*$/, '=w208-h288-p-k-no-nu');
+    row.insertBefore(el('img', { 'class': 'thumb', src: src, alt: '', loading: 'lazy', width: '104', height: '144' }), row.firstChild);
+  });
+
   loadSeriesIndex().then(function (series) {
     var match = null, isIndex = false;
     series.forEach(function (s) {
@@ -625,7 +649,7 @@
     }
     var meta = $('.post-meta', article);
     var timeLeft = el('span', { 'class': 'time-left', text: Math.max(1, Math.round(total / 230)) + ' min read' });
-    if (meta) { meta.appendChild(el('span', { 'class': 'dot', text: '·' })); meta.appendChild(timeLeft); }
+    if (meta) meta.appendChild(timeLeft);   // the date is put in front once the chapter list is in
 
     // top nav (filled once the chapter list is in)
     var topNav = el('nav', { 'class': 'chap-nav-top', 'aria-label': 'Chapter navigation' });
@@ -658,8 +682,7 @@
     var railAd = rail && adSlot('rail', A.rail);
     if (railAd) rail.appendChild(railAd);
 
-    // comments (Disqus loads only when asked)
-    setupComments();
+    // below the comments box (made earlier, Disqus loads only when asked)
     var multi = adSlot('multiplex', A.multiplex);
     var comments = $('.comments', article.parentNode);
     if (multi) (comments || endNav).parentNode.insertBefore(multi, (comments || endNav).nextSibling);
@@ -727,6 +750,11 @@
       }
       var prev = list[chapterIndex - 1], next = list[chapterIndex + 1];
       drawNav(s, list, prev, next);
+      var day = list[chapterIndex][2];
+      if (meta && day) {
+        meta.insertBefore(el('span', { 'class': 'dot', text: '·' }), meta.firstChild);
+        meta.insertBefore(el('time', { 'class': 'published', datetime: day, text: fmtDate(day) }), meta.firstChild);
+      }
       save();
     });
 
@@ -900,14 +928,27 @@
 
   /* ---------- post lists: show which novel each chapter belongs to ---------- */
   function tagPostRows(series) {
-    $$('.post-row').forEach(function (row) {
-      var a = $('h3 a', row);
-      if (!a) return;
+    var rows = $$('.post-row'), need = {};
+    if (!rows.length) return;
+    rows.forEach(function (row) {
+      var a = $('h3 a', row), m = $('.row-meta', row);
+      if (!a || !m) return;
       var p = a.getAttribute('href').replace(/^https?:\/\/[^/]+/, '');
+      row.setAttribute('data-path', p);
       var s = series.filter(function (x) { return x.rx.test(p); })[0];
-      var m = $('.row-meta', row);
-      if (s && m) m.insertBefore(el('span', { 'class': 'series-tag', text: s.title + (s.part ? ' (' + s.part + ')' : '') }), m.firstChild);
+      if (s) { m.appendChild(el('span', { 'class': 'series-tag', text: s.title + (s.part ? ' (' + s.part + ')' : '') })); need[s.id] = s; }
     });
+    // dates: newest posts from Blogger's feed, the rest from the chapter lists
+    function addDates(list) {
+      var map = {};
+      list.forEach(function (c) { map[c[0]] = c[2]; });
+      rows.forEach(function (row) {
+        var d = map[row.getAttribute('data-path')], m = $('.row-meta', row);
+        if (d && m && !$('time', m)) m.appendChild(el('time', { datetime: d, text: fmtDate(d) }));
+      });
+    }
+    recentPosts().then(addDates);
+    Object.keys(need).forEach(function (id) { loadChapters(need[id]).then(addDates); });
   }
 
   /* ---------- ad-blocker note: small and easy to close ---------- */

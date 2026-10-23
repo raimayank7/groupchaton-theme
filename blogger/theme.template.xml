@@ -153,50 +153,44 @@ body#layout .section{margin:0 0 12px}
 
 <!-- ======================= POSTS, PAGES AND LISTS ======================= -->
 <div class='container page-wrap'>
-  <b:section class='blog-section' id='posts' name='Blog Posts' showaddelement='no'>
+  <b:section class='blog-section' id='posts' name='Blog Posts' showaddelement='yes'>
     <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2' visible='true'>
-      <!-- Self-contained on purpose: no b:include of Blogger's helper blocks. If a helper is missing,
-           Blogger silently drops the whole gadget. -->
+      <!-- Keep this gadget to the Blogger data that is proven to render (the same as on ShareYourGroup):
+           post url, title, body, labels, featured image and pager links. If any expression fails,
+           Blogger silently drops the whole gadget and every page goes blank. Dates, thumbnails,
+           list titles and the comments box are added by gco.js instead. -->
       <b:includable id='main' var='this'>
         <b:if cond='data:view.isMultipleItems'>
           <div class='reading'>
-            <b:if cond='!data:view.isHomepage'>
-              <h1 class='list-title'><b:if cond='data:view.search.label'><data:view.search.label/><b:elseif cond='data:view.search.query'/>Results for &#8220;<data:view.search.query/>&#8221;<b:else/>All chapters</b:if></h1>
-            </b:if>
+            <h1 class='list-title' hidden='hidden'>Chapters</h1>
             <div class='post-list'>
               <b:loop values='data:posts' var='post'>
                 <article class='post-row'>
-                  <b:if cond='data:post.featuredImage'><img alt='' class='thumb' height='144' loading='lazy' width='104' expr:src='resizeImage(data:post.featuredImage, 104, &quot;2:3&quot;)'/></b:if>
-                  <div>
+                  <b:attr cond='data:post.featuredImage' expr:value='resizeImage(data:post.featuredImage, 640, &quot;16:9&quot;)' name='data-img'/>
+                  <div class='row-text'>
                     <h3><a expr:href='data:post.url'><data:post.title/></a></h3>
-                    <div class='row-meta'><time expr:datetime='data:post.date.iso8601'><data:post.date/></time></div>
+                    <div class='row-meta'/>
                   </div>
                 </article>
               </b:loop>
             </div>
             <div class='blog-pager' id='blog-pager'>
-              <b:if cond='data:newerPageUrl'><a class='btn btn-sm' expr:href='data:newerPageUrl'>&#8592; Newer</a><b:else/><span/></b:if>
-              <b:if cond='data:olderPageUrl'><a class='btn btn-sm' expr:href='data:olderPageUrl'>Older chapters &#8594;</a></b:if>
+              <b:if cond='data:newerPageUrl'><a class='btn btn-sm' expr:href='data:newerPageUrl'>&#8592; Newer</a></b:if>
+              <b:if cond='data:olderPageUrl'><a class='btn btn-sm pager-older' expr:href='data:olderPageUrl'>Older chapters &#8594;</a></b:if>
             </div>
           </div>
         <b:else/>
           <b:loop values='data:posts' var='post'>
-            <article class='reading post' expr:data-id='data:post.id'>
+            <article class='reading post'>
               <div class='crumb'><a href='/'>Home</a></div>
               <h1 class='post-title entry-title'><data:post.title/></h1>
-              <div class='post-meta'><b:if cond='data:view.isPost'><time class='published' expr:datetime='data:post.date.iso8601'><data:post.date/></time></b:if></div>
+              <div class='post-meta'/>
               <div class='post-body entry-content' expr:id='&quot;post-body-&quot; + data:post.id'>
                 <data:post.body/>
               </div>
               <b:if cond='data:post.labels'>
                 <div class='post-labels'>
                   <b:loop values='data:post.labels' var='label'><a expr:href='data:label.url' rel='tag'><data:label.name/></a></b:loop>
-                </div>
-              </b:if>
-              <b:if cond='data:view.isPost and data:post.allowComments'>
-                <div class='comments' id='comments' expr:data-id='data:post.id' expr:data-url='data:post.url'>
-                  <button class='btn' data-load-comments='1' type='button'>&#128172; Show comments</button>
-                  <div id='disqus_thread'/>
                 </div>
               </b:if>
             </article>
@@ -222,9 +216,9 @@ body#layout .section{margin:0 0 12px}
         <p>Fan-proofread English translations of Korean web novels, with new chapters every week.</p>
         <div class='socials'>
           <a aria-label='Facebook' class='icon-btn' href='https://www.facebook.com/YOUR-PAGE' rel='noopener' target='_blank' title='Facebook'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z'/></svg></a>
+          <a aria-label='Instagram' class='icon-btn' href='https://www.instagram.com/YOUR-PAGE' rel='noopener' target='_blank' title='Instagram'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><rect height='18' rx='5' width='18' x='3' y='3'/><circle cx='12' cy='12' r='4'/><circle cx='17.5' cy='6.5' fill='currentColor' r='1' stroke='none'/></svg></a>
           <a aria-label='X' class='icon-btn' href='https://www.x.com/YOUR-NAME' rel='noopener' target='_blank' title='X'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M4 4l16 16M20 4 4 20'/></svg></a>
           <a aria-label='WhatsApp channel' class='icon-btn' href='https://whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank' title='WhatsApp channel'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z'/><path d='M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .9a5 5 0 0 1-2.8-2.8l.9-1-1-2z'/></svg></a>
-          <a aria-label='YouTube' class='icon-btn' href='https://www.youtube.com/@YOUR-CHANNEL' rel='noopener' target='_blank' title='YouTube'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><rect height='14' rx='4' width='20' x='2' y='5'/><path d='m10 9 5 3-5 3z'/></svg></a>
           <a aria-label='Support us on Ko-fi' class='icon-btn' href='https://ko-fi.com/YOUR-NAME' rel='noopener' target='_blank' title='Ko-fi'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M17 8h1a4 4 0 0 1 0 8h-1'/><path d='M3 8h14v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z'/><path d='M7 2v3M11 2v3M15 2v3'/></svg></a>
         </div>
       </div>
