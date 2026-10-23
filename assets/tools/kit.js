@@ -6,6 +6,8 @@
   'use strict';
   var C = window.GCO || {};
   var BASE = C.base || '';
+  // EDIT: bump this after changing any file in assets/tools/, so browsers fetch the new version straight away
+  var VERSION = '2026-10-23.3';
   var doc = document;
   var T = window.GCOTools = window.GCOTools || {};
 
@@ -369,12 +371,12 @@
   });
 
   // load the stylesheet, then each tool's script
-  if (!doc.getElementById('gco-tools-css')) doc.head.appendChild(h('link', { id: 'gco-tools-css', rel: 'stylesheet', href: BASE + 'assets/tools/tools.css' }));
+  if (!doc.getElementById('gco-tools-css')) doc.head.appendChild(h('link', { id: 'gco-tools-css', rel: 'stylesheet', href: BASE + 'assets/tools/tools.css?v=' + VERSION }));
   $all('[data-gco-tool]').forEach(function (page) {
     var id = page.getAttribute('data-gco-tool');
     if (registry[id]) return mount(page);
     if (!/^[a-z0-9-]+$/.test(id)) return;
-    T.loadScript(BASE + 'assets/tools/' + id + '.js').catch(function (e) {
+    T.loadScript(BASE + 'assets/tools/' + id + '.js?v=' + VERSION).catch(function (e) {
       var spot = page.querySelector('.gco-tool-mount');
       if (spot) spot.appendChild(h('p', { 'class': 'tstatus is-error', text: e.message }));
     });

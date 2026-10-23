@@ -607,7 +607,7 @@
   if (body.classList.contains('is-page') && !$('.gco-page')) body.classList.add('legacy-page');
   // free tools: the kit loads each tool's code only on its own page
   C.adSlot = adSlot;
-  if ($('[data-gco-tool]')) doc.body.appendChild(el('script', { src: BASE + 'assets/tools/kit.js', async: 'async' }));
+  if ($('[data-gco-tool]')) doc.body.appendChild(el('script', { src: BASE + 'assets/tools/kit.js?v=' + Math.floor(Date.now() / 6e5), async: 'async' }));
 
   if (body.classList.contains('is-page')) {
     var end = adSlot('ad-end', A.end);
