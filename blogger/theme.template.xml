@@ -80,6 +80,9 @@ body#layout .section{margin:0 0 12px}
 </head>
 
 <body expr:class='data:view.isHomepage ? &quot;is-home&quot; : (data:view.isPost ? &quot;is-post&quot; : (data:view.isPage ? &quot;is-page&quot; : (data:view.isError ? &quot;is-error&quot; : &quot;is-list&quot;)))'>
+<!-- Never drawn. When a theme upload keeps old gadgets, Blogger drops them into the first section:
+     this one, so they can't break the page. Safe to delete them from Blogger: Layout. -->
+<b:section class='old-gadgets' cond='false' id='old-gadgets' name='Old gadgets (hidden, safe to delete)' showaddelement='no'/>
 <a class='skip-link' href='#content'>Skip to content</a>
 <div aria-hidden='true' class='read-progress'><span/></div>
 
@@ -94,7 +97,7 @@ body#layout .section{margin:0 0 12px}
     <nav aria-label='Main' class='nav' id='nav'>
       <a href='/#novels'>Novels</a>
       <a href='/#latest'>Latest</a>
-      <a href='https://www.whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank'>Updates</a>
+      <a href='https://whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank'>Updates</a>
       <a href='/p/utility-tools.html'>Tools</a>
       <a href='/p/donations.html'>Support us</a>
       <a href='/p/contact-us.html'>Contact</a>
@@ -150,7 +153,7 @@ body#layout .section{margin:0 0 12px}
 
 <!-- ======================= POSTS, PAGES AND LISTS ======================= -->
 <div class='container page-wrap'>
-  <b:section class='blog-section' id='blog-main' name='Blog Posts' showaddelement='no'>
+  <b:section class='blog-section' id='posts' name='Blog Posts' showaddelement='no'>
     <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2' visible='true'>
       <!-- Self-contained on purpose: no b:include of Blogger's helper blocks. If a helper is missing,
            Blogger silently drops the whole gadget. -->
@@ -220,7 +223,7 @@ body#layout .section{margin:0 0 12px}
         <div class='socials'>
           <a aria-label='Facebook' class='icon-btn' href='https://www.facebook.com/YOUR-PAGE' rel='noopener' target='_blank' title='Facebook'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z'/></svg></a>
           <a aria-label='X' class='icon-btn' href='https://www.x.com/YOUR-NAME' rel='noopener' target='_blank' title='X'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M4 4l16 16M20 4 4 20'/></svg></a>
-          <a aria-label='WhatsApp channel' class='icon-btn' href='https://www.whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank' title='WhatsApp channel'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z'/><path d='M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .9a5 5 0 0 1-2.8-2.8l.9-1-1-2z'/></svg></a>
+          <a aria-label='WhatsApp channel' class='icon-btn' href='https://whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank' title='WhatsApp channel'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z'/><path d='M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .9a5 5 0 0 1-2.8-2.8l.9-1-1-2z'/></svg></a>
           <a aria-label='YouTube' class='icon-btn' href='https://www.youtube.com/@YOUR-CHANNEL' rel='noopener' target='_blank' title='YouTube'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><rect height='14' rx='4' width='20' x='2' y='5'/><path d='m10 9 5 3-5 3z'/></svg></a>
           <a aria-label='Support us on Ko-fi' class='icon-btn' href='https://ko-fi.com/YOUR-NAME' rel='noopener' target='_blank' title='Ko-fi'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M17 8h1a4 4 0 0 1 0 8h-1'/><path d='M3 8h14v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z'/><path d='M7 2v3M11 2v3M15 2v3'/></svg></a>
         </div>
@@ -241,7 +244,7 @@ body#layout .section{margin:0 0 12px}
         <ul>
           <li><a href='/#continue'>Continue reading</a></li>
           <li><a href='/#latest'>Latest chapters</a></li>
-          <li><a href='https://www.whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank'>New chapter alerts (WhatsApp)</a></li>
+          <li><a href='https://whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank'>New chapter alerts (WhatsApp)</a></li>
           <li><a data-feedback='report' href='/p/contact-us.html'>Report a typo or mistake</a></li>
           <li><a data-feedback='request' href='/p/contact-us.html'>Request a novel</a></li>
           <li><a href='/p/comment-policy.html'>Comment rules</a></li>

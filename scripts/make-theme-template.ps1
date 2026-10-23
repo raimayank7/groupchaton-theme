@@ -17,7 +17,7 @@ $rules = @(
   # social profiles and support links
   @('https://www\.facebook\.com/[^''"/\s]+/?', 'https://www.facebook.com/YOUR-PAGE'),
   @('https://www\.x\.com/[^''"/\s]+/?', 'https://www.x.com/YOUR-NAME'),
-  @('https://www\.whatsapp\.com/channel/[A-Za-z0-9]+', 'https://www.whatsapp.com/channel/YOUR-CHANNEL'),
+  @('https://(www\.)?whatsapp\.com/channel/[A-Za-z0-9]+', 'https://whatsapp.com/channel/YOUR-CHANNEL'),
   @('https://www\.youtube\.com/@[^''"/\s]+', 'https://www.youtube.com/@YOUR-CHANNEL'),
   @('https://ko-fi\.com/[^''"/\s]+', 'https://ko-fi.com/YOUR-NAME'),
   @('https://www\.trustpilot\.com/review/[^''"/\s]+', 'https://www.trustpilot.com/review/your-domain.com'),
