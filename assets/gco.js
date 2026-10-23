@@ -543,6 +543,19 @@
   var article = $('article.post');
   var postBody = article && $('.post-body', article);
 
+  /* ---------- SEO: structured data for search engines (Google reads script-added JSON-LD) ---------- */
+  var ORIGIN = location.origin;
+  var PUBLISHER = { '@type': 'Organization', name: 'GroupChatOn', url: ORIGIN + '/',
+    logo: { '@type': 'ImageObject', url: BASE + 'assets/brand/favicon-512.png' } };
+  function addJsonLd(graph) {
+    doc.head.appendChild(el('script', { type: 'application/ld+json', text: JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }) }));
+  }
+  function crumbs(items) {
+    return { '@type': 'BreadcrumbList', itemListElement: items.map(function (it, i) {
+      return { '@type': 'ListItem', position: i + 1, name: it[0], item: ORIGIN + it[1] }; }) };
+  }
+  function ogImage() { var m = $('meta[property="og:image"]'); return m ? m.getAttribute('content') : undefined; }
+
   /* ---------- what the Blogger template leaves to this script (see the note in theme.xml) ---------- */
   // comments box on posts: same Disqus thread ids as the old theme (post url + post id)
   if (article && postBody && body.classList.contains('is-post') && C.disqus) {
@@ -564,7 +577,8 @@
     var src = row.getAttribute('data-img')
       .replace(/\/(s|w)\d+[^/]*\/(?=[^/]+$)/, '/w208-h288-p-k-no-nu/')
       .replace(/=(s|w)\d+[^/]*$/, '=w208-h288-p-k-no-nu');
-    row.insertBefore(el('img', { 'class': 'thumb', src: src, alt: '', loading: 'lazy', width: '104', height: '144' }), row.firstChild);
+    var rowTitle = ($('h3 a', row) || {}).textContent || '';
+    row.insertBefore(el('img', { 'class': 'thumb', src: src, alt: rowTitle.trim(), loading: 'lazy', width: '104', height: '144' }), row.firstChild);
   });
 
   loadSeriesIndex().then(function (series) {
@@ -762,6 +776,16 @@
         meta.insertBefore(el('span', { 'class': 'dot', text: '·' }), meta.firstChild);
         meta.insertBefore(el('time', { 'class': 'published', datetime: day, text: fmtDate(day) }), meta.firstChild);
       }
+      // SEO: "Chapter 784 – The Reincarnated Assassin is a Genius Swordsman | GroupChatOn" + structured data
+      var chTitle = $('.post-title', article).textContent.trim(), novel = seriesName(s);
+      doc.title = chTitle + ' – ' + s.title + (s.part ? ' (' + s.part + ')' : '') + ' | GroupChatOn';
+      addJsonLd([
+        crumbs([['Home', '/'], [novel, s.index], [chTitle, PATH]]),
+        { '@type': 'Article', headline: (chTitle + ' – ' + s.title).slice(0, 110), url: ORIGIN + PATH, mainEntityOfPage: ORIGIN + PATH,
+          image: ogImage() || s.cover, datePublished: day || undefined, inLanguage: 'en', wordCount: total, position: chapterIndex + 1,
+          isPartOf: { '@type': 'Book', name: s.title, url: ORIGIN + s.index, image: s.cover },
+          author: PUBLISHER, publisher: PUBLISHER }
+      ]);
       save();
     });
 
@@ -781,8 +805,11 @@
           el('span', {}, [el('small', { text: 'Next chapter' }), doc.createTextNode(next[1])]),
           el('span', { html: icon(ICON.right) })]));
       } else {
-        endNav.appendChild(el('div', { 'class': 'caught-up', html: '<b>You’re all caught up!</b>New chapters of ' +
-          seriesName(s).replace(/</g, '&lt;') + ' are posted regularly. Check back soon.' }));
+        var up = el('div', { 'class': 'caught-up' }, [el('b', { text: 'You’re all caught up!' }),
+          doc.createTextNode((C.caughtUp || 'New chapters of {novel} are coming soon. Thank you for reading!').replace('{novel}', seriesName(s)))]);
+        if (C.alertsUrl) up.appendChild(el('a', { 'class': 'btn btn-sm caught-up-btn', href: C.alertsUrl, rel: 'noopener', target: '_blank',
+          text: 'Get new-chapter alerts on WhatsApp' }));
+        endNav.appendChild(up);
       }
       endNav.appendChild(el('div', { 'class': 'chap-end-row' }, [
         navBtn(prev, 'Previous', 'prev'),
@@ -859,7 +886,7 @@
     $$(':scope > h3[align="center"], :scope > body > h3', postBody).forEach(function (n) { n.remove(); });
     var hist = store.get(HIST, {})[s.id];
     var hero = el('div', { 'class': 'series-hero' });
-    hero.appendChild(el('img', { src: s.cover, alt: '', loading: 'eager', width: '400', height: '600' }));
+    hero.appendChild(el('img', { src: s.cover, alt: s.title + ' cover', loading: 'eager', width: '400', height: '600' }));
     var info = el('div');
     if (s.alt) info.appendChild(el('p', { 'class': 'alt', text: 'Also known as: ' + s.alt }));
     var genres = el('div', { 'class': 'genres' });
@@ -895,6 +922,15 @@
       }
       actions.appendChild(el('a', { 'class': 'btn', href: list[list.length - 1][0], text: 'Latest chapter' }));
       tocBox.appendChild(chapterList(s, list, hist ? hist.u : '', { resume: true }));
+      // SEO: the novel as a Book, with its chapters' range and update date
+      var summary = (($('.custom-post p', postBody) || {}).textContent || '').replace(/^\s*Summary\s*:\s*/i, '').trim();
+      addJsonLd([
+        crumbs([['Home', '/'], [seriesName(s), PATH]]),
+        { '@type': 'Book', name: s.title + (s.part ? ' (' + s.part + ')' : ''), alternateName: s.alt ? s.alt.split(/,\s*/) : undefined,
+          url: ORIGIN + PATH, image: s.cover, genre: s.genres, inLanguage: 'en', bookFormat: 'https://schema.org/EBook',
+          description: summary ? summary.slice(0, 300) : undefined, dateModified: newest[2] || undefined,
+          numberOfPages: list.length, publisher: PUBLISHER }
+      ]);
     });
   }
 
@@ -906,7 +942,7 @@
       series.forEach(function (s) {
         var fresh = s.newest && (Date.now() - new Date(s.newest[2] + 'T12:00:00')) < 7 * 864e5;
         grid.appendChild(el('a', { 'class': 'series-card', href: s.index }, [
-          el('div', { 'class': 'cover' }, [el('img', { src: s.cover, alt: '', loading: 'lazy', width: '400', height: '600' }),
+          el('div', { 'class': 'cover' }, [el('img', { src: s.cover, alt: s.title + ' cover', loading: 'lazy', width: '400', height: '600' }),
             fresh ? el('span', { 'class': 'badge', text: 'NEW' }) : null]),
           el('b', { text: s.title + (s.part ? ' (' + s.part + ')' : '') }),
           el('small', { text: s.count + ' chapters' + (s.newest ? ' · ' + fmtDate(s.newest[2]) : '') })]));
@@ -958,7 +994,26 @@
     Object.keys(need).forEach(function (id) { loadChapters(need[id]).then(addDates); });
   }
 
-  /* ---------- ad-blocker note: small and easy to close ---------- */
+  /* ---------- notes under the header: announcement (from theme.xml) and ad-blocker appeal ---------- */
+  var barSlot = null;
+  function noticeBar(kind, emoji, title, text, onClose) {
+    var bar = el('div', { 'class': 'notice-bar notice-' + kind, role: 'note' }, [el('div', { 'class': 'container notice-inner' }, [
+      el('span', { 'class': 'notice-ic', 'aria-hidden': 'true', text: emoji }),
+      el('div', { 'class': 'notice-text' }, [el('b', { text: title }), el('span', { text: text })]),
+      el('button', { type: 'button', 'class': 'icon-btn', 'aria-label': 'Close', html: icon(ICON.x), onclick: function () { onClose(); bar.remove(); } })])]);
+    var after = barSlot || header;
+    if (after && after.parentNode) after.parentNode.insertBefore(bar, after.nextSibling);
+    barSlot = bar;
+  }
+  // announcement above the header (written in theme.xml): closing it is remembered for its data-id
+  $$('[data-close-announce]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var a = $('#announce');
+      if (!a) return;
+      store.set('gco-announce-closed', a.getAttribute('data-id'));
+      a.hidden = true;
+    });
+  });
   window.addEventListener('load', function () {
     if (!C.adClient) return;
     setTimeout(function () {
@@ -966,11 +1021,9 @@
       if (ok) return;
       html.classList.add('no-ads');   // ads blocked: close up the empty ad boxes
       if (Date.now() < store.get('gco-adnote', 0)) return;
-      var bar = el('div', { 'class': 'notice-bar', role: 'note' }, [el('div', { 'class': 'container notice-inner' }, [
-        el('p', { html: C.adblockText || '💚 <b>Ads keep new chapters free.</b> Please allow ads on GroupChatOn.' }),
-        el('button', { type: 'button', 'class': 'icon-btn', 'aria-label': 'Close', html: icon(ICON.x), onclick: function () {
-          store.set('gco-adnote', Date.now() + 7 * 864e5); bar.remove(); } })])]);
-      header && header.parentNode.insertBefore(bar, header.nextSibling);
+      noticeBar('ads', '💚', C.adblockTitle || 'Ads keep GroupChatOn free',
+        C.adblockText || 'We keep ads light so reading stays comfortable. Please allow ads on this site: it keeps new chapters coming.',
+        function () { store.set('gco-adnote', Date.now() + 7 * 864e5); });
     }, 3500);
   });
 })();

@@ -21,6 +21,13 @@
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/apple-touch-icon.png' rel='apple-touch-icon'/>
   <title><b:if cond='data:view.isHomepage'><data:blog.title.escaped/> &#8212; Korean Web Novels, Proofread in English<b:else/><data:view.title.escaped/> | <data:blog.title.escaped/></b:if></title>
   <meta content='summary_large_image' name='twitter:card'/>
+  <!-- SEO: Blogger's all-head-content above already gives canonical, description, og:title, og:url,
+       og:description and og:image. These add the rest, using only data proven on this blog.
+       gco.js adds structured data (chapters, novels, breadcrumbs) and fuller chapter titles. -->
+  <meta content='GroupChatOn' property='og:site_name'/>
+  <meta content='en_US' property='og:locale'/>
+  <b:if cond='data:view.isPost'><meta content='article' property='og:type'/><b:else/><meta content='website' property='og:type'/></b:if>
+  <meta content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' name='robots'/>
 
   <!-- The reader's saved settings (theme, font, size...) apply before the page paints -->
   <script>
@@ -65,6 +72,23 @@
     }
   }
   </script>
+  <!-- EDIT: social profiles shown to search engines -->
+  <script type='application/ld+json'>
+  {
+    &quot;@context&quot;: &quot;https://schema.org&quot;,
+    &quot;@type&quot;: &quot;Organization&quot;,
+    &quot;name&quot;: &quot;GroupChatOn&quot;,
+    &quot;url&quot;: &quot;https://www.your-domain.com/&quot;,
+    &quot;logo&quot;: &quot;https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/favicon-512.png&quot;,
+    &quot;description&quot;: &quot;Fan-proofread English translations of Korean web novels.&quot;,
+    &quot;sameAs&quot;: [
+      &quot;https://www.facebook.com/YOUR-PAGE
+      &quot;https://www.instagram.com/YOUR-PAGE
+      &quot;https://www.x.com/YOUR-NAME
+      &quot;https://whatsapp.com/channel/YOUR-CHANNEL&quot;
+    ]
+  }
+  </script>
   </b:if>
 
 <b:skin><![CDATA[
@@ -84,6 +108,21 @@ body#layout .section{margin:0 0 12px}
      this one, so they can't break the page. Safe to delete them from Blogger: Layout. -->
 <b:section class='old-gadgets' cond='false' id='old-gadgets' name='Old gadgets (hidden, safe to delete)' showaddelement='no'/>
 <a class='skip-link' href='#content'>Skip to content</a>
+
+<!-- EDIT: announcement bar above the header, on every page. Readers can close it. To show a new
+     message to everyone again, change data-id. To turn it off, delete this div and the script below it. -->
+<div class='notice-bar notice-announce' data-id='break-2026-10' id='announce' role='note'>
+  <div class='container notice-inner'>
+    <span aria-hidden='true' class='notice-ic'>&#128591;</span>
+    <div class='notice-text'><b>Sorry for the long wait!</b><span>No new chapters have been posted for the past few months. We&#8217;re back at work and new chapters are coming soon. Thank you for staying with us!</span></div>
+    <button aria-label='Close' class='icon-btn' data-close-announce='1' type='button'><svg aria-hidden='true' class='i' viewBox='0 0 24 24'><path d='M6 6l12 12M18 6 6 18'/></svg></button>
+  </div>
+</div>
+<script>
+//<![CDATA[
+(function(){var a=document.getElementById('announce');try{if(a&&JSON.parse(localStorage.getItem('gco-announce-closed'))===a.getAttribute('data-id'))a.hidden=true}catch(e){}})();
+//]]>
+</script>
 <div aria-hidden='true' class='read-progress'><span/></div>
 
 <!-- ======================= HEADER ======================= -->
@@ -310,7 +349,10 @@ window.GCO = {
   },
   adEveryWords: 900,          /* one in-article ad about every 900 words */
   adMaxInArticle: 3,          /* never more than 3 inside one chapter */
-  disqus: ''    /* Disqus shortname: keeps the old comment threads */
+  disqus: '',   /* Disqus shortname: keeps the old comment threads */
+  /* EDIT: message at the end of the newest chapter ({novel} = the novel's name) */
+  caughtUp: 'Sorry for the long break since the last chapter. New chapters of {novel} are coming soon!',
+  alertsUrl: 'https://whatsapp.com/channel/YOUR-CHANNEL'   /* "Get new-chapter alerts" button */
 };
 //]]>
 </script>
