@@ -14,6 +14,7 @@ $rules = @(
   @('ca-pub-\d{10,}', 'ca-pub-0000000000000000'),
   @("(top|inArticle|end|rail|multiplex|home): '\d+'", '$1: '''''),
   @("disqus: '[^']*'", "disqus: ''"),
+  @("tinyurlKey: '[^']*'", "tinyurlKey: ''"),
   # social profiles and support links
   @('https://www\.instagram\.com/[^''"/\s]+/?', 'https://www.instagram.com/YOUR-PAGE'),
   @('https://www\.facebook\.com/[^''"/\s]+/?', 'https://www.facebook.com/YOUR-PAGE'),

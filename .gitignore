@@ -3,3 +3,5 @@
 blogger/theme.xml
 SETUP-GUIDE.html
 __pycache__/
+blogger/pages/
+PAGES-GUIDE.html

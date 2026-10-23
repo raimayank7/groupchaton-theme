@@ -595,6 +595,12 @@
     if (window.console) console.warn('GroupChatOn: series list not loaded', e);
   });
 
+  // pages rebuilt for this theme (<div class="gco-page">) vs old pages that still carry the old theme's styles
+  if (body.classList.contains('is-page') && !$('.gco-page')) body.classList.add('legacy-page');
+  // free tools: the kit loads each tool's code only on its own page
+  C.adSlot = adSlot;
+  if ($('[data-gco-tool]')) doc.body.appendChild(el('script', { src: BASE + 'assets/tools/kit.js', async: 'async' }));
+
   if (body.classList.contains('is-page')) {
     var end = adSlot('ad-end', A.end);
     if (end && article) article.appendChild(end);
