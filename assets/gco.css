@@ -63,7 +63,8 @@ button{font:inherit;color:inherit}
 .site-header.is-hidden{transform:translateY(-100%)}
 .nav-wrap{display:flex;align-items:center;gap:12px;height:100%}
 .brand{display:flex;align-items:center;flex:none;margin-right:auto}
-.logo-img{height:30px;width:auto;display:block}
+.logo-img{height:40px;width:auto;display:block}
+@media (max-width:359px){.site-header .logo-img{height:27px}}
 .logo-dark{display:none}
 html[data-theme='dark'] .logo-light,html[data-theme='black'] .logo-light{display:none}
 html[data-theme='dark'] .logo-dark,html[data-theme='black'] .logo-dark{display:block}
@@ -79,7 +80,7 @@ html[data-theme='dark'] .logo-dark,html[data-theme='black'] .logo-dark{display:b
   .nav.is-open{display:flex}
   .nav a{padding:12px;font-size:16px}
   .menu-toggle{display:inline-grid}
-  .logo-img{height:26px}
+  .logo-img{height:32px}
 }
 /* phones: on chapter pages keep only Chapters, Aa and the menu (Prev / Next sit under the title) */
 @media (max-width:560px){
