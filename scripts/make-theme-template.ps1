@@ -23,6 +23,8 @@ $rules = @(
   @('https://www\.youtube\.com/@[^''"/\s]+', 'https://www.youtube.com/@YOUR-CHANNEL'),
   @('https://ko-fi\.com/[^''"/\s]+', 'https://ko-fi.com/YOUR-NAME'),
   @('https://www\.trustpilot\.com/review/[^''"/\s]+', 'https://www.trustpilot.com/review/your-domain.com'),
+  # sponsored cards hold your referral links: the template gets one sample card
+  @("(?s)(<b:widget id='HTML987'.*?<!\[CDATA\[).*?(\]\]>)", '$1<div><b class="promo-title">Your offer</b><span class="promo-line">One line about it.</span><a class="cta-btn" href="https://example.com/" rel="sponsored noopener" target="_blank">Learn more</a></div>$2'),
   # your own domain
   @('https?://(?:www\.)?groupchaton\.com', 'https://www.your-domain.com')
 )

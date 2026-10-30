@@ -128,7 +128,7 @@ aside.rail{display:none}
    series pages, tool and policy pages, lists) uses the site font, whatever fonts old posts set inline. */
 .post-body{font-family:var(--ui);font-size:17px;line-height:1.7;color:var(--ink);overflow-wrap:break-word;hyphens:manual}
 .is-post:not(.is-series) .post-body{font-family:var(--rd-font);font-size:var(--rd-size);line-height:var(--rd-lh)}
-.is-post:not(.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.credits):not(.credits *):not(.ad-slot):not(.ad-slot *){font-family:inherit!important}
+.is-post:not(.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.credits):not(.credits *):not(.ad-slot):not(.ad-slot *):not(.pick):not(.pick *){font-family:inherit!important}
 :is(.is-page,.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.uk-icon){font-family:var(--ui)!important}
 .is-series .post-body{font-size:17px;line-height:1.7}
 .is-chapter .post-body p{margin:0 0 var(--rd-para)}
@@ -197,6 +197,24 @@ aside.rail .ad-slot{margin:0;min-height:600px}
 @media (max-width:600px){
   .ad-slot.ad-top,.ad-slot.ad-end,.ad-slot.in-article,.ad-slot.multiplex{width:auto;max-width:none;margin-left:-16px;margin-right:-16px}
 }
+/* sponsored cards (from the "Sponsored cards" gadget): your own offers, in the site font and colours */
+.picks-src{display:none!important}
+.pick{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;max-width:440px;margin:32px auto;padding:34px 18px 18px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);text-align:center;font:400 15px/1.45 var(--ui);clear:both;overflow:hidden;box-sizing:border-box}
+.pick::before{content:attr(data-label);position:absolute;top:12px;left:16px;font:500 11px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);opacity:.8}
+.pick>*{max-width:100%}
+.pick br{display:none}
+.pick a{color:var(--accent)}
+.pick img{display:block;width:auto;max-width:100%;height:auto;max-height:240px;margin:0 auto 6px;border-radius:10px}
+.pick .pk-ic{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 4px;border-radius:20px;background:var(--accent);color:var(--accent-ink)}
+.pick .pk-ic svg{width:36px;height:36px}
+.pick .pk-title{display:block;margin:2px 0 0;font:700 17px/1.3 var(--ui);color:var(--ink)}
+.pick .pk-line{display:block;max-width:340px;color:var(--ink-soft)}
+.pick .pk-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px;padding:0 20px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:600 15px/1.2 var(--ui);text-decoration:none}
+.pick .pk-btn:hover{filter:brightness(1.06)}
+.pick small{display:block;margin-top:2px;color:var(--muted);font-size:12.5px}
+.pick-chapter{margin:28px auto 8px}
+aside.rail .pick{margin:0;max-width:300px}
+.post-list .pick{grid-column:1/-1;margin:6px auto}
 /* ads Google places by itself (Auto ads) stay within the content width */
 .google-auto-placed{max-width:100%!important;clear:both;margin-left:auto!important;margin-right:auto!important;overflow:hidden}
 .site-header .google-auto-placed,.nav .google-auto-placed{position:static}

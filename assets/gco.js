@@ -352,6 +352,7 @@
   function adSlot(kind, slotId) {
     if (!C.adClient || !slotId) return null;
     var d = el('div', { 'class': 'ad-slot ' + kind, 'data-slot': slotId, 'data-kind': kind });
+    if (adsBlocked) return pickFor(kind) || d;   // .no-ads hides d
     if (adObserver) adObserver.observe(d); else setTimeout(function () { fillAd(d); }, 0);
     return d;
   }
@@ -365,10 +366,10 @@
     if (kind !== 'in-article' && kind !== 'multiplex') ins.setAttribute('data-full-width-responsive', 'false');
     ins.style.display = 'block';
     d.appendChild(ins);
-    // collapse the slot when Google has no ad for it (older browsers lack CSS :has)
+    // when Google has no ad for it, a sponsored card takes the slot, or it collapses (older browsers lack CSS :has)
     if (window.MutationObserver) new MutationObserver(function (m, o) {
       var st = ins.getAttribute('data-ad-status');
-      if (st === 'unfilled') { d.classList.add('is-empty'); o.disconnect(); }
+      if (st === 'unfilled') { if (!pickInto(d)) d.classList.add('is-empty'); o.disconnect(); }
       else if (st === 'filled') o.disconnect();
     }).observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
@@ -380,6 +381,76 @@
       html.classList.toggle('has-anchor', !!(a && a.getBoundingClientRect().top > window.innerHeight / 2));
       if (++anchorChecks > 40) clearInterval(anchorTimer);
     }, 1500);
+  }
+
+  /* ======================================================================
+     Sponsored cards: your own promo cards from the hidden "Sponsored cards" gadget (theme.xml).
+     They take ad spaces Google leaves empty or an ad blocker hides, plus one fixed spot per page,
+     never more than C.picksMax on a page. Cards for Indian offers show only to readers in India.
+     ====================================================================== */
+  var adsBlocked = false;
+  var INDIA_OFFER = /phon\.pe|phonepe\.com|gpay\.app|pay\.google\.com|airtel\.in|buildwealth\.in|₹/i;
+  var picks = (function () {
+    var src = $('#picks-src'), box = src && ($('.widget-content', src) || src), code = box ? box.innerHTML.trim() : '';
+    if (src) src.parentNode.removeChild(src);
+    if (!code) return [];
+    var t = doc.createElement('template');   // a template, so no banner loads until its card is shown
+    t.innerHTML = code;
+    var kids = [].slice.call(t.content.children);
+    var loose = [].some.call(t.content.childNodes, function (n) { return n.nodeType === 3 && n.nodeValue.trim(); });
+    if (loose || !kids.length || !kids.every(function (k) { return k.tagName === 'DIV'; })) {
+      var one = doc.createElement('div');
+      one.appendChild(t.content);
+      kids = [one];
+    }
+    // India: by the device's time zone (no location lookup). data-only="in" / "all" on a card overrides the guess.
+    var india = false;
+    try { india = /^Asia\/(Kolkata|Calcutta)$/.test(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) {}
+    return kids.filter(function (k) {
+      var only = (k.getAttribute('data-only') || '').toLowerCase();
+      return india || !(only ? only === 'in' : INDIA_OFFER.test(k.innerHTML));
+    });
+  })();
+  // ad blockers hide well-known names like promo-banner and cta-btn, so the cards are renamed
+  var PICK_CLASS = { 'promo-banner': 'pk-img', 'promo-ic': 'pk-ic', 'promo-title': 'pk-title', 'promo-line': 'pk-line', 'cta-btn': 'pk-btn' };
+  var picksMax = C.picksMax == null ? 3 : C.picksMax, picksShown = 0, picksInText = 0;
+  var pickTurn = Math.floor(Math.random() * Math.max(picks.length, 1));   // each page starts on a different card
+  function pickCard(where) {
+    // each card at most once on a page
+    if (!picks.length || picksShown >= Math.min(picksMax, picks.length)) return null;
+    var card = picks[pickTurn++ % picks.length].cloneNode(true);
+    picksShown++;
+    $$('[class]', card).forEach(function (n) {
+      n.setAttribute('class', n.getAttribute('class').split(/\s+/).map(function (c) { return PICK_CLASS[c] || c; }).join(' '));
+    });
+    // a card with several banners shows one of them at random
+    var imgs = $$('img.pk-img', card);
+    if (imgs.length > 1) {
+      var keep = Math.floor(Math.random() * imgs.length);
+      imgs.forEach(function (img, i) { if (i !== keep) { var a = img.closest('a') || img; a.parentNode.removeChild(a); } });
+    }
+    var d = el('div', { 'class': 'pick pick-' + where, 'data-label': card.getAttribute('data-label') || 'Sponsored' });
+    while (card.firstChild) d.appendChild(card.firstChild);
+    return d;
+  }
+  // which empty ad spaces get a card: not the one above the story, at most one inside the text,
+  // and not the end-of-chapter ad (a fixed card sits just below it)
+  function pickFor(kind) {
+    if (kind === 'in-article' && picksInText) return null;
+    if (kind === 'ad-end' && body.classList.contains('is-chapter')) return null;
+    if (kind === 'rail' && !html.classList.contains('rail-fits')) return null;   // side column not shown
+    if (kind !== 'in-article' && kind !== 'ad-end' && kind !== 'rail') return null;
+    var card = pickCard(kind);
+    if (card && kind === 'in-article') picksInText++;
+    return card;
+  }
+  function pickInto(slot) {
+    if (!slot.parentNode) return false;
+    var card = pickFor(slot.getAttribute('data-kind'));
+    if (!card) return false;
+    if (adObserver) adObserver.unobserve(slot);
+    slot.parentNode.replaceChild(card, slot);
+    return true;
   }
 
   /* ======================================================================
@@ -721,6 +792,9 @@
     var multi = adSlot('multiplex', A.multiplex);
     var comments = $('.comments', article.parentNode);
     if (multi) (comments || endNav).parentNode.insertBefore(multi, (comments || endNav).nextSibling);
+    // one sponsored card after the Next button, above the comments
+    var endPick = pickCard('chapter');
+    if (endPick) endNav.parentNode.insertBefore(endPick, endNav.nextSibling);
 
     // progress bar + time left + saving position
     var bar = $('.read-progress span');
@@ -936,6 +1010,8 @@
       }
       actions.appendChild(el('a', { 'class': 'btn', href: list[list.length - 1][0], text: 'Latest chapter' }));
       tocBox.appendChild(chapterList(s, list, hist ? hist.u : '', { resume: true }));
+      var seriesPick = pickCard('series');
+      if (seriesPick) postBody.appendChild(seriesPick);
       // SEO: the novel as a Book, with its chapters' range and update date
       var summary = (($('.custom-post p', postBody) || {}).textContent || '').replace(/^\s*Summary\s*:\s*/i, '').trim();
       addJsonLd([
@@ -987,6 +1063,9 @@
   function tagPostRows(series) {
     var rows = $$('.post-row'), need = {};
     if (!rows.length) return;
+    // one sponsored card in longer post lists (home, novel labels, search), after the fourth post
+    var listPick = rows.length > 5 && pickCard('list');
+    if (listPick) rows[3].parentNode.insertBefore(listPick, rows[4]);
     rows.forEach(function (row) {
       var a = $('h3 a', row), m = $('.row-meta', row);
       if (!a || !m) return;
@@ -1033,7 +1112,9 @@
     setTimeout(function () {
       var ok = window.adsbygoogle && window.adsbygoogle.loaded;
       if (ok) return;
-      html.classList.add('no-ads');   // ads blocked: close up the empty ad boxes
+      html.classList.add('no-ads');   // ads blocked: close up the empty ad boxes, sponsored cards take some of them
+      adsBlocked = true;
+      $$('.ad-slot').forEach(pickInto);
       if (Date.now() < store.get('gco-adnote', 0)) return;
       noticeBar('ads', '💚', C.adblockTitle || 'Ads keep GroupChatOn free',
         C.adblockText || 'We keep ads light so reading stays comfortable. Please allow ads on this site: it keeps new chapters coming.',

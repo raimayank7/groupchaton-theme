@@ -330,6 +330,22 @@ body#layout .section{margin:0 0 12px}
   </div>
 </b:if>
 
+<!-- Sponsored cards. Edit them in Blogger: Layout, "Sponsored cards" gadget, pencil icon.
+     One <div> per card; they take turns. A card with several <img class="promo-banner"> shows one at random.
+     Cards for Indian offers (PhonePe, Google Pay, Airtel, Wealthy, or any card with data-only="in") show only
+     to readers in India; data-only="all" shows a card to everyone. data-label changes the "Sponsored" label.
+     gco.js reads this gadget and removes it, so it is never drawn here. -->
+<b:section class='picks-src' id='picks-src' name='Sponsored cards' showaddelement='no'>
+  <b:widget id='HTML987' locked='false' title='Sponsored cards' type='HTML' version='2' visible='true'>
+    <b:widget-settings>
+      <b:widget-setting name='content'><![CDATA[<div><b class="promo-title">Your offer</b><span class="promo-line">One line about it.</span><a class="cta-btn" href="https://example.com/" rel="sponsored noopener" target="_blank">Learn more</a></div>]]></b:widget-setting>
+    </b:widget-settings>
+    <b:includable id='main'>
+      <div class='widget-content'><data:content/></div>
+    </b:includable>
+  </b:widget>
+</b:section>
+
 <div aria-live='polite' class='toast' id='toast' role='status'/>
 
 <!-- ======================= SETTINGS + SCRIPT ======================= -->
@@ -350,6 +366,7 @@ window.GCO = {
   },
   adEveryWords: 900,          /* one in-article ad about every 900 words */
   adMaxInArticle: 3,          /* never more than 3 inside one chapter */
+  picksMax: 3,                /* most sponsored cards on one page (0 = none); edit the cards in the Sponsored cards gadget */
   disqus: '',   /* Disqus shortname: keeps the old comment threads */
   /* EDIT: message at the end of the newest chapter ({novel} = the novel's name) */
   caughtUp: 'Sorry for the long break since the last chapter. New chapters of {novel} are coming soon!',
