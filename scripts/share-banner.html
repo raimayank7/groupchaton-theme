@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Source of assets/brand/share-banner.jpg (the 1200x630 picture WhatsApp, Facebook and X show for a shared link).
+     Rebuild: msedge --headless --hide-scrollbars --window-size=1200,630 --screenshot=out.png scripts/share-banner.html -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,700;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:630px;overflow:hidden}
+body{font-family:Figtree,sans-serif;color:#1d1f22;background:#fbfaf7;position:relative}
+.wash{position:absolute;right:-120px;top:-120px;width:700px;height:860px;background:#e8f3e6;border-radius:50%;transform:rotate(-12deg)}
+.left{position:absolute;left:68px;top:64px;width:600px}
+.logo{height:60px;display:block}
+h1{font-family:Literata,serif;font-weight:700;font-size:62px;line-height:1.08;letter-spacing:-1px;margin-top:50px}
+h1 em{color:#2c8a3a}
+.sub{margin-top:22px;font-size:24px;color:#3b3f45;line-height:1.4}
+.chips{display:flex;gap:12px;margin-top:30px}
+.chip{border:1px solid #e6e2d9;background:#fff;border-radius:999px;padding:9px 18px;font-size:18px;font-weight:600;color:#3b3f45}
+.foot{position:absolute;left:68px;bottom:54px;display:flex;align-items:center;gap:22px}
+.btn{background:#2c8a3a;color:#fff;font-weight:700;font-size:22px;border-radius:999px;padding:15px 30px}
+.url{font-size:21px;color:#646b74;font-weight:600}
+.book{position:absolute;right:84px;top:70px;width:380px;height:490px;background:#fff;border:1px solid #e6e2d9;border-radius:18px;box-shadow:0 30px 60px rgba(29,31,34,.16);padding:40px 38px;transform:rotate(3deg)}
+.sheet{position:absolute;right:66px;top:88px;width:380px;height:490px;background:#f3f1ec;border:1px solid #e6e2d9;border-radius:18px;transform:rotate(6deg)}
+.ch{font-size:15px;font-weight:700;letter-spacing:2px;color:#2c8a3a;text-transform:uppercase}
+.bt{font-family:Literata,serif;font-weight:700;font-size:30px;margin-top:10px;line-height:1.15}
+.ln{height:11px;border-radius:6px;background:#ece8df;margin-top:16px}
+.ln.first{margin-top:30px}
+.drop{font-family:Literata,serif;font-style:italic;font-size:20px;color:#3b3f45;margin-top:26px;line-height:1.5}
+.nav{position:absolute;left:38px;right:38px;bottom:34px;display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:#646b74}
+.nav span:last-child{color:#2c8a3a}
+</style></head>
+<body>
+<div class="wash"></div>
+<div class="left">
+  <img class="logo" src="../assets/brand/logo-light.png" alt="">
+  <h1>Korean web novels, <em>proofread</em> in English.</h1>
+  <p class="sub">Free fan translations, polished line by line, in a calm reading layout.</p>
+  <div class="chips"><span class="chip">Action</span><span class="chip">Fantasy</span><span class="chip">Murim</span><span class="chip">New chapters weekly</span></div>
+</div>
+<div class="sheet"></div>
+<div class="book">
+  <div class="ch">Chapter 1</div>
+  <div class="bt">A new story begins</div>
+  <div class="ln first"></div><div class="ln" style="width:92%"></div><div class="ln" style="width:97%"></div><div class="ln" style="width:70%"></div>
+  <p class="drop">“Read in comfort, chapter after chapter.”</p>
+  <div class="ln" style="margin-top:26px"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:60%"></div>
+  <div class="nav"><span>← Previous</span><span>Next chapter →</span></div>
+</div>
+<div class="foot"><span class="btn">Start reading</span><span class="url">www.groupchaton.com</span></div>
+</body></html>
