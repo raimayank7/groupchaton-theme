@@ -1148,7 +1148,7 @@
     Object.keys(need).forEach(function (id) { loadChapters(need[id]).then(addDates); });
   }
 
-  /* ---------- notes under the header: announcement (from theme.xml) and ad-blocker appeal ---------- */
+  /* ---------- note under the header: ad-blocker appeal ---------- */
   var barSlot = null;
   function noticeBar(kind, emoji, title, text, onClose) {
     var bar = el('div', { 'class': 'notice-bar notice-' + kind, role: 'note' }, [el('div', { 'class': 'container notice-inner' }, [
@@ -1159,15 +1159,6 @@
     if (after && after.parentNode) after.parentNode.insertBefore(bar, after.nextSibling);
     barSlot = bar;
   }
-  // announcement above the header (written in theme.xml): closing it is remembered for its data-id
-  $$('[data-close-announce]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var a = $('#announce');
-      if (!a) return;
-      store.set('gco-announce-closed', a.getAttribute('data-id'));
-      a.hidden = true;
-    });
-  });
   window.addEventListener('load', function () {
     if (!C.adClient) return;
     setTimeout(function () {
