@@ -2,6 +2,7 @@
    Designed & Developed by Nivesh Sahayak (https://www.niveshsahayak.in/). All rights reserved: see LICENSE.
    Reader settings (font, size, spacing, width, theme) are CSS variables set by gco.js and the
    small script in the theme's <head>, so a reader's choice applies before the page paints. */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Literata:ital,opsz,wght@0,7..72,400..800;1,7..72,400&display=swap');
 
 /* ---------- Themes ---------- */
 :root{
@@ -129,7 +130,7 @@ aside.rail{display:none}
 .post-body{font-family:var(--ui);font-size:17px;line-height:1.7;color:var(--ink);overflow-wrap:break-word;hyphens:manual}
 .is-post:not(.is-series) .post-body{font-family:var(--rd-font);font-size:var(--rd-size);line-height:var(--rd-lh)}
 .is-post:not(.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.credits):not(.credits *):not(.ad-slot):not(.ad-slot *):not(.pick):not(.pick *){font-family:inherit!important}
-:is(.is-page,.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.uk-icon){font-family:var(--ui)!important}
+:is(.is-page,.is-series) .post-body *:not(i):not([class*='fa-']):not(code):not(pre):not(kbd):not(.uk-icon):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6){font-family:var(--ui)!important}
 .is-series .post-body{font-size:17px;line-height:1.7}
 .is-chapter .post-body p{margin:0 0 var(--rd-para)}
 html[data-align='justify'] .is-chapter .post-body p{text-align:justify;hyphens:auto}
@@ -511,3 +512,12 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
   [data-gco-page].is-loaded>*{animation:none}
 }
 
+
+/* ===== Type system: one font per role (same on every page) =====
+   Headings: Literata (the same book face as the reader) · Text, lists, menus, buttons, forms: Figtree
+   Inside a story the reader's own font choice (Book / Clean / Easy-read) still wins. */
+html:root{--ui:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;--head:'Literata',Georgia,'Iowan Old Style',serif}
+html[data-font='sans']{--rd-font:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+html[data-font='readable']{--rd-font:'Atkinson Hyperlegible','Figtree',system-ui,sans-serif}
+:is(h1,h2,h3,h4,h5,h6){font-family:var(--head)!important;letter-spacing:-.01em}
+button,input,select,textarea,optgroup{font-family:inherit}
