@@ -484,9 +484,9 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 @media print{.site-header,.site-footer,.ad-slot,.chap-end,.chap-nav-top,.comments,.rail,.read-progress,.toast{display:none!important}body{background:#fff;color:#000}}
 
 /* Pages loaded from GitHub (data-gco-page): shimmer skeleton while loading, then sections fade up in turn */
-[data-gco-page].is-loading{position:relative;min-height:320px;overflow:hidden}
-[data-gco-page].is-loading>*{opacity:0}
-[data-gco-page].is-loading::before{content:"";position:absolute;inset:0;
+[data-gco-page]:not(.is-loaded):not(.is-failed){animation:gcoWait 8s step-end;position:relative;min-height:320px;overflow:hidden}
+[data-gco-page]:not(.is-loaded):not(.is-failed)>*{animation:gcoGone 8s step-end}
+[data-gco-page]:not(.is-loaded):not(.is-failed)::before{content:"";position:absolute;inset:0;
   --sk:color-mix(in srgb,currentColor 10%,transparent);
   background:
     linear-gradient(var(--sk),var(--sk)) 0 0/55% 28px no-repeat,
@@ -495,11 +495,16 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
     linear-gradient(var(--sk),var(--sk)) 0 102px/97% 14px no-repeat,
     linear-gradient(var(--sk),var(--sk)) 0 128px/70% 14px no-repeat,
     linear-gradient(var(--sk),var(--sk)) 0 172px/100% 120px no-repeat;
-  border-radius:16px}
-[data-gco-page].is-loading::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  border-radius:16px;animation:gcoDone 0s 8s forwards}
+[data-gco-page]:not(.is-loaded):not(.is-failed)::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
   background:linear-gradient(90deg,transparent,color-mix(in srgb,currentColor 9%,transparent),transparent);
-  animation:gcoShimmer 1.15s ease-in-out infinite}
+  animation:gcoShimmer 1.15s ease-in-out infinite,gcoDone 0s 8s forwards}
 @keyframes gcoShimmer{to{transform:translateX(100%)}}
+/* Loading state from the first paint, before the script runs: the Blogger fallback text is hidden for at most 8 s,
+   so it comes back by itself if the script never loads (and at once, with .is-failed, if the page file can't be fetched) */
+@keyframes gcoWait{0%,100%{-webkit-text-fill-color:transparent}}
+@keyframes gcoGone{0%,100%{opacity:0}}
+@keyframes gcoDone{to{opacity:0;visibility:hidden}}
 [data-gco-page].is-loaded>*{animation:gcoPageIn .55s cubic-bezier(.2,.7,.2,1) both}
 [data-gco-page].is-loaded>*:nth-child(2){animation-delay:.06s}
 [data-gco-page].is-loaded>*:nth-child(3){animation-delay:.12s}
@@ -508,7 +513,7 @@ html[data-theme='dark'] .fb-status.is-error,html[data-theme='black'] .fb-status.
 [data-gco-page].is-loaded>*:nth-child(n+6){animation-delay:.3s}
 @keyframes gcoPageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){
-  [data-gco-page].is-loading::after{display:none}
+  [data-gco-page]:not(.is-loaded):not(.is-failed)::after{display:none}
   [data-gco-page].is-loaded>*{animation:none}
 }
 
