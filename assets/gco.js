@@ -6,6 +6,47 @@
    - Series pages: cover, Start / Continue, searchable chapter list
    - Home: Continue reading + novel covers
    Chapter lists come from data/series/*.json on GitHub, plus Blogger's own feed for brand-new chapters. */
+/* Pages from GitHub: a Blogger page holds only <div data-gco-page="about-us">short fallback text</div>.
+   The real content is assets/pages/about-us.html in this repo: edit it and push, and the live page changes
+   with nothing to paste. The rest of this file starts once the page content is in place. */
+(function () {
+  'use strict';
+  var PBASE = (window.GCO || {}).base || '';
+
+  /* scripts added with innerHTML don't run: recreate them one by one, in order
+     (an external library such as PayPal's must finish loading before the script that uses it) */
+  function runScripts(box, done) {
+    var list = Array.prototype.slice.call(box.querySelectorAll('script'));
+    (function next() {
+      var old = list.shift();
+      if (!old) return done();
+      var s = document.createElement('script');
+      Array.prototype.forEach.call(old.attributes, function (a) { s.setAttribute(a.name, a.value); });
+      if (old.src) { s.onload = s.onerror = next; } else { s.text = old.text; }
+      old.parentNode.replaceChild(s, old);
+      if (!old.src) next();
+    })();
+  }
+
+  function loadPages(done) {
+    var slots = document.querySelectorAll('[data-gco-page]'), left = slots.length;
+    if (!left) return done();
+    Array.prototype.forEach.call(slots, function (el) {
+      el.classList.add('is-loading');   // shimmer skeleton (gco.css) until the content arrives
+      fetch(PBASE + 'assets/pages/' + el.getAttribute('data-gco-page') + '.html', { cache: 'no-cache' })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(function (html) {
+          var ids = (window.GCO || {}).ids || {};   // personal ids (PayPal, Ko-fi…) live in the theme, not in this public repo
+          el.innerHTML = html.replace(/\{\{(\w+)\}\}/g, function (m, k) { return ids[k] != null ? ids[k] : m; });
+          el.classList.add('is-loaded');   // sections fade up one after another
+          return new Promise(function (res) { runScripts(el, res); });
+        })
+        .catch(function () {})   // keep the fallback text from the Blogger page
+        .then(function () { el.classList.remove('is-loading'); if (--left === 0) done(); });
+    });
+  }
+
+  function gcoMain() {
 (function () {
   'use strict';
 
@@ -1121,4 +1162,8 @@
         function () { store.set('gco-adnote', Date.now() + 7 * 864e5); });
     }, 3500);
   });
+})();
+  }
+
+  loadPages(gcoMain);
 })();
