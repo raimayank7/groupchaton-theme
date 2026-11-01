@@ -9,6 +9,26 @@
 /* Pages from GitHub: a Blogger page holds only <div data-gco-page="about-us">short fallback text</div>.
    The real content is assets/pages/about-us.html in this repo: edit it and push, and the live page changes
    with nothing to paste. The rest of this file starts once the page content is in place. */
+/* Retired pages: the old tool pages now live on Infinity, and the WhatsApp group pages on ShareYourGroup.
+   Blogger's own redirects can't point to another site, so they are sent on here before anything is drawn. */
+(function () {
+  var INF = 'https://infinity.groupchaton.com/', P = INF + '2026/11/', SYG = 'https://www.shareyourgroup.com/';
+  var MOVED = {
+    'advance-image-convertor': P + 'image-converter-jpg-png-and-webp-in-bulk.html', 'audio-to-text-converter-speech': P + 'speech-to-text-type-with-your-voice.html',
+    'case-converter': P + 'case-converter-upper-lower-title-and.html', 'direct-whatsapp-message-form': P + 'whatsapp-direct-message-chat-without.html',
+    'file-compression': P + 'zip-and-unzip-files-online.html', 'html-to-pdf-converter': P + 'html-to-pdf-convert-html-code-to-pdf.html',
+    'image-compressor': P + 'image-compressor-shrink-and-resize.html', 'image-to-pdf-converter': P + 'image-to-pdf-turn-photos-into-one-pdf.html',
+    'image-to-text-ocr-converter': P + 'image-to-text-ocr-read-text-from-photos.html', 'password-generator': P + 'password-generator-strong-random.html',
+    'pdf-merge-tool': P + 'merge-pdf-combine-pdf-files-free-online.html', 'pdf-organizer': P + 'pdf-organizer-rotate-delete-and-reorder.html',
+    'pdf-splitter-extract-pages': P + 'split-pdf-extract-pages-from-pdf.html', 'pdf-to-image-converter-tool': P + 'pdf-to-image-convert-pdf-pages-to-jpg.html',
+    'pdf-to-text-converter': P + 'pdf-to-text-copy-text-out-of-any-pdf.html', 'text-to-pdf-converter': P + 'text-to-pdf-save-typed-text-as-pdf.html',
+    'text-to-speech-tts-converter': P + 'text-to-speech-listen-to-any-text-read.html', 'url-shortener': P + 'url-shortener-make-long-links-short.html',
+    'url-to-qr-code-generator': P + 'qr-code-generator-free-qr-codes-for.html', 'word-counter': P + 'word-counter-words-characters-and.html',
+    'utility-tools': INF, 'groupconnecthub': SYG, 'responsive-form': SYG, 'submit-group-links': SYG + 'p/submit-your-group-links.html'
+  };
+  var m = location.pathname.match(/^\/p\/([\w-]+)\.html$/);
+  if (m && MOVED[m[1]]) location.replace(MOVED[m[1]]);
+})();
 (function () {
   'use strict';
   var PBASE = (window.GCO || {}).base || '';
