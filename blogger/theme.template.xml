@@ -19,7 +19,7 @@
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/favicon.ico' rel='icon' sizes='any'/>
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/favicon-192.png' rel='icon' sizes='192x192' type='image/png'/>
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/apple-touch-icon.png' rel='apple-touch-icon'/>
-  <title><b:if cond='data:view.isHomepage'><data:blog.title.escaped/> &#8212; Korean Web Novels, Proofread in English<b:else/><data:view.title.escaped/> | <data:blog.title.escaped/></b:if></title>
+  <title><b:if cond='data:view.isHomepage'><data:blog.title.escaped/> &#8212; Korean Web Novels, Proofread in English<b:elseif cond='data:view.isError'/>Page Not Found | <data:blog.title.escaped/><b:elseif cond='data:view.isLabelSearch'/><data:view.search.label.escaped/> Novels and Chapters | <data:blog.title.escaped/><b:elseif cond='data:view.isSearch and data:view.search.query'/>Search: <data:view.search.query.escaped/> | <data:blog.title.escaped/><b:elseif cond='data:view.isMultipleItems'/>All Chapters | <data:blog.title.escaped/><b:else/><data:view.title.escaped/> | <data:blog.title.escaped/></b:if></title>
   <meta content='summary_large_image' name='twitter:card'/>
   <!-- SEO: Blogger's all-head-content above already gives canonical, description, og:title, og:url,
        og:description and og:image. These add the rest, using only data proven on this blog.
@@ -126,6 +126,7 @@ body#layout .section{margin:0 0 12px}
       <a href='/#latest'>Latest</a>
       <a href='https://whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank'>Updates</a>
       <a href='https://infinity.groupchaton.com/'>Tools</a>
+      <a href='https://help.groupchaton.com/'>Help</a>
       <a href='/p/donations.html'>Support us</a>
       <a href='/p/contact-us.html'>Contact</a>
     </nav>
@@ -189,7 +190,7 @@ body#layout .section{margin:0 0 12px}
       <b:includable id='main' var='this'>
         <b:if cond='data:view.isMultipleItems'>
           <div class='reading'>
-            <h1 class='list-title' hidden='hidden'>Chapters</h1>
+            <b:if cond='!data:view.isHomepage'><h1 class='list-title' hidden='hidden'>Chapters</h1></b:if>
             <div class='post-list'>
               <b:loop values='data:posts' var='post'>
                 <article class='post-row'>
@@ -279,6 +280,7 @@ body#layout .section{margin:0 0 12px}
           <li><a href='/p/donations.html'>Support us</a></li>
           <li><a href='https://www.trustpilot.com/review/your-domain.com' rel='noopener' target='_blank'>Review us on Trustpilot</a></li>
           <li><a href='https://infinity.groupchaton.com/'>Free tools</a></li>
+          <li><a href='https://help.groupchaton.com/'>Help centre</a></li>
           <li><a href='/p/contact-us.html'>Contact us</a></li>
           <li><a href='/p/privacy-policy.html'>Privacy policy</a></li>
           <li><a href='/p/disclaimer.html'>Disclaimer</a></li>

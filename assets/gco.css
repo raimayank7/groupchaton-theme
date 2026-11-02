@@ -525,3 +525,13 @@ html[data-font='sans']{--rd-font:'Figtree',system-ui,-apple-system,'Segoe UI',Ro
 html[data-font='readable']{--rd-font:'Atkinson Hyperlegible','Figtree',system-ui,sans-serif}
 :is(h1,h2,h3,h4,h5,h6){font-family:var(--head)!important;letter-spacing:-.01em}
 button,input,select,textarea,optgroup{font-family:inherit}
+
+/* search box (header search sheet, list pages, page not found) + matching novels */
+.gco-search{display:flex;gap:8px;margin:0 0 18px;padding:6px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}
+.gco-search input{flex:1;min-width:0;height:44px;padding:0 12px;border:0;background:transparent;color:var(--ink);font:500 16px var(--ui);outline:none}
+.gco-search .btn{flex:none}
+.novel-hits{margin:0 0 24px}
+.novel-hits h2,.not-found h2{margin:0 0 12px;font-size:20px}
+.search-hits .series-grid{margin:0 0 14px}
+.not-found{padding:8px 0 40px}
+.not-found .gco-search{margin:18px 0}

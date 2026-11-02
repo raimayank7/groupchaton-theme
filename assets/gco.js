@@ -194,6 +194,7 @@
   var lastFocus;
   function openSheet(s) {
     closeSheets();
+    closeMenu();   // the ☰ menu would otherwise stay open behind the sheet
     lastFocus = doc.activeElement;
     s.classList.add('is-open');
     backdrop.classList.add('is-open');
@@ -266,6 +267,62 @@
   if (menuBtn && nav) menuBtn.addEventListener('click', function () {
     var open = nav.classList.toggle('is-open');
     menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  function closeMenu() { if (nav && nav.classList.contains('is-open')) { nav.classList.remove('is-open'); if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false'); } }
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  // Help centre in the menu and the footer (older uploaded themes don't have it)
+  if (nav && !$('a[href*="help.groupchaton.com"]', nav)) {
+    var tools = $('a[href*="infinity.groupchaton.com"]', nav);
+    nav.insertBefore(el('a', { href: 'https://help.groupchaton.com/', text: 'Help' }), tools ? tools.nextSibling : null);
+  }
+  var footTools = $('.site-footer a[href="https://infinity.groupchaton.com/"]');
+  if (footTools && !$('.site-footer a[href*="help.groupchaton.com"]'))
+    footTools.parentNode.parentNode.insertBefore(el('li', {}, [el('a', { href: 'https://help.groupchaton.com/', text: 'Help centre' })]), footTools.parentNode.nextSibling);
+
+  /* ---------- search: the header's search button opens a box; novels are matched by name, chapters by Blogger's search ---------- */
+  function searchForm(q) {
+    var input = el('input', { type: 'search', name: 'q', value: q, placeholder: 'Novel name, chapter or word', 'aria-label': 'Search novels and chapters', autocomplete: 'off' });
+    return el('form', { 'class': 'gco-search', action: '/search', method: 'get', role: 'search' }, [input,
+      el('button', { 'class': 'btn btn-primary', type: 'submit', text: 'Search' })]);
+  }
+  function seriesGrid(list) {
+    return el('div', { 'class': 'series-grid' }, list.map(function (s) {
+      return el('a', { 'class': 'series-card', href: s.index }, [
+        el('div', { 'class': 'cover' }, [el('img', { src: s.cover, alt: s.title + ' cover', loading: 'lazy', width: '400', height: '600' })]),
+        el('b', { text: s.title + (s.part ? ' (' + s.part + ')' : '') }), el('small', { text: s.count + ' chapters' })]);
+    }));
+  }
+  // novels whose name (or other names) has every word of the search, or whose genres include the label
+  function novelMatches(q, label) {
+    var norm = function (t) { return String(t || '').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9가-힣]+/g, ' ').trim(); };
+    var words = norm(q).split(' ').filter(function (w) { return w.length > 1 && ['the', 'of', 'a', 'an', 'in', 'is'].indexOf(w) < 0; });
+    if (!words.length && !label) return Promise.resolve([]);
+    return loadSeriesIndex().then(function (series) {
+      return series.filter(function (s) {
+        if (label) return (s.genres || []).some(function (g) { return norm(g) === norm(label); });
+        var hay = ' ' + norm([s.title, s.short, s.alt, s.id].join(' ')) + ' ';
+        return words.every(function (w) { return hay.indexOf(w) >= 0; });
+      });
+    }).catch(function () { return []; });
+  }
+  var searchSheet;
+  doc.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('.nav-actions a[href="/search"]');
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault();
+    closeMenu();
+    if (!searchSheet) {
+      searchSheet = makeSheet('search-sheet', 'Search');
+      var sb = $('.sheet-body', searchSheet), f = searchForm(''), hits = el('div', { 'class': 'search-hits' }), t;
+      sb.appendChild(f); sb.appendChild(hits);
+      sb.appendChild(el('p', { 'class': 'muted', html: 'Tip: type a novel’s name, or a word from a chapter title and press <b>Search</b>. <a href="/search">Browse all chapters</a>.' }));
+      $('input', f).addEventListener('input', function () {
+        var v = this.value; clearTimeout(t);
+        t = setTimeout(function () { novelMatches(v).then(function (found) { hits.innerHTML = ''; if (found.length) hits.appendChild(seriesGrid(found)); }); }, 150);
+      });
+    }
+    openSheet(searchSheet);
+    setTimeout(function () { var i = $('input', searchSheet); if (i) i.focus(); }, 60);
   });
   var lastY = window.scrollY;
   window.addEventListener('scroll', function () {
@@ -709,8 +766,35 @@
   var listTitle = $('.list-title');
   if (listTitle && body.classList.contains('is-list')) {
     var labelM = PATH.match(/^\/search\/label\/(.+)$/), q = new URLSearchParams(location.search).get('q');
-    listTitle.textContent = labelM ? decodeURIComponent(labelM[1]).replace(/\+/g, ' ') : q ? 'Results for “' + q + '”' : 'All chapters';
+    var labelName = labelM ? decodeURIComponent(labelM[1]).replace(/\+/g, ' ') : '';
+    listTitle.textContent = labelM ? labelName : q ? 'Results for “' + q + '”' : 'All chapters';
     listTitle.hidden = false;
+    // older uploaded themes title these pages "GroupChatOn | GroupChatOn"
+    if (/^GroupChatOn \| GroupChatOn$/.test(doc.title)) doc.title = (labelM ? labelName + ' Novels and Chapters' : q ? 'Search: ' + q : 'All Chapters') + ' | GroupChatOn';
+    // a search box above the list, and the novels that match the search or the label (Blogger's search only finds chapters)
+    listTitle.parentNode.insertBefore(searchForm(q || ''), listTitle.nextSibling);
+    novelMatches(labelM ? '' : q, labelName).then(function (found) {
+      if (!found.length) return;
+      var box = el('section', { 'class': 'novel-hits', 'aria-label': 'Matching novels' }, [el('h2', { text: found.length === 1 ? 'Novel' : 'Novels' }), seriesGrid(found)]);
+      listTitle.parentNode.insertBefore(box, $('.post-list') || null);
+    });
+  }
+  // the home page's hidden list heading would be a second H1 (older uploaded themes still have it)
+  if (body.classList.contains('is-home')) $$('.list-title').forEach(function (h) { if (h.hidden) h.remove(); });
+  // Blogger's "page not found" has no text of its own
+  if (body.classList.contains('is-error')) {
+    var nf = $('#Blog1') || $('#posts') || $('main');
+    if (nf && !nf.textContent.trim()) {
+      var words = PATH.replace(/\.html$/, '').split('/').pop().replace(/[-_]+/g, ' ').replace(/\d+/g, ' ').trim();
+      var box = el('div', { 'class': 'reading not-found' }, [
+        el('h1', { 'class': 'list-title', text: 'Page not found' }),
+        el('p', { text: 'Sorry, this page isn’t here. It may have moved, or the address may have a typo. Search for a novel or chapter, or pick a novel below.' }),
+        searchForm(words.length > 2 ? words : ''),
+        el('p', {}, [el('a', { href: '/', text: '← Home' }), ' · ', el('a', { href: '/#latest', text: 'Latest chapters' }), ' · ', el('a', { href: '/p/contact-us.html', text: 'Contact us' })])]);
+      nf.appendChild(box);
+      loadSeriesIndex().then(function (series) { box.appendChild(el('h2', { text: 'Our novels' })); box.appendChild(seriesGrid(series)); }).catch(function () {});
+      if (/^GroupChatOn \| GroupChatOn$/.test(doc.title)) doc.title = 'Page Not Found | GroupChatOn';
+    }
   }
   // list thumbnails from each post's featured image, cropped to a book-cover shape
   $$('.post-row[data-img]').forEach(function (row) {
