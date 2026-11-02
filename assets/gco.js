@@ -529,6 +529,28 @@
       return india || !(only ? only === 'in' : INDIA_OFFER.test(k.innerHTML));
     });
   })();
+  /* GroupChatOn sites recommend each other (owner, 2026-11-02): cards for our other sites join the sponsored-card
+     rotation, labelled "From GroupChatOn"; a site never shows its own card. */
+  (function () {
+    var host = location.hostname.replace(/^www\./, '');
+    var FAMILY = [
+      ['infinity.groupchaton.com', 'https://infinity.groupchaton.com/', 'https://assets.infinity.groupchaton.com/assets/brand/favicon-192.png', 'Infinity',
+       '609 free tools, no sign-up', 'PDF, image, video, QR and WhatsApp tools that run in your browser. Your files never leave your device.', 'Open the free tools'],
+      ['groupchaton.com', 'https://www.groupchaton.com/', 'https://assets.groupchaton.com/assets/brand/favicon-192.png', 'GroupChatOn Novels',
+       'Read Korean web novels free', '2,000+ proofread chapters, like Trash of the Count’s Family, with new chapters every week.', 'Start reading'],
+      ['share.groupchaton.com', 'https://share.groupchaton.com/', 'https://share.groupchaton.com/brand/favicon-192.png', 'Share',
+       'Find WhatsApp groups by topic', '2,400+ groups and channels, each with its own page, safety tips and a report button.', 'Browse groups']
+    ];
+    FAMILY.forEach(function (f) {
+      if (f[0] === host) return;
+      var d = doc.createElement('div');
+      d.setAttribute('data-label', 'From GroupChatOn');
+      d.innerHTML = '<a class="promo-ic is-mark" href="' + f[1] + '" rel="noopener" target="_blank" aria-label="' + f[3] + '"><img src="' + f[2] + '" alt="" width="72" height="72" loading="lazy"></a>' +
+        '<b class="promo-title">' + f[4] + '</b><span class="promo-line">' + f[5] + '</span>' +
+        '<a class="cta-btn" href="' + f[1] + '" rel="noopener" target="_blank">' + f[6] + ' ↗</a><small>' + f[0].replace(/^groupchaton/, 'www.groupchaton') + '</small>';
+      picks.push(d);
+    });
+  })();
   // ad blockers hide well-known names like promo-banner and cta-btn, so the cards are renamed
   var PICK_CLASS = { 'promo-banner': 'pk-img', 'promo-ic': 'pk-ic', 'promo-title': 'pk-title', 'promo-line': 'pk-line', 'cta-btn': 'pk-btn' };
   var picksMax = C.picksMax == null ? 3 : C.picksMax, picksShown = 0, picksInText = 0;
