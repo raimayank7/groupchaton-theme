@@ -34,7 +34,7 @@
   var PBASE = (window.GCO || {}).base || '';
 
   /* scripts added with innerHTML don't run: recreate them one by one, in order
-     (an external library such as PayPal's must finish loading before the script that uses it) */
+     (an external library must finish loading before the script that uses it) */
   function runScripts(box, done) {
     var list = Array.prototype.slice.call(box.querySelectorAll('script'));
     (function next() {
@@ -56,7 +56,7 @@
       fetch(PBASE + 'assets/pages/' + el.getAttribute('data-gco-page') + '.html', { cache: 'no-cache' })
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
         .then(function (html) {
-          var ids = (window.GCO || {}).ids || {};   // personal ids (PayPal, Ko-fi…) live in the theme, not in this public repo
+          var ids = (window.GCO || {}).ids || {};   // personal ids (Ko-fi…) live in the theme, not in this public repo
           el.innerHTML = html.replace(/\{\{(\w+)\}\}/g, function (m, k) { return ids[k] != null ? ids[k] : m; });
           el.classList.add('is-loaded');   // sections fade up one after another
           return new Promise(function (res) { runScripts(el, res); });
