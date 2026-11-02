@@ -73,6 +73,10 @@
   var C = window.GCO || {};
   var BASE = C.base || '';
   var doc = document, html = doc.documentElement, body = doc.body;
+  /* owner rule: the important pages (privacy, disclaimer, terms, contact, about, comment policy, donations, ask for a tool)
+     never show ads or sponsor cards. Themes uploaded before this rule still load Google's script, so ad requests are paused too. */
+  var NO_ADS = /\/p\/(privacy-policy|disclaimer|terms-of-use|terms|contact-support|contact-us|contact|about-us|about|ask-for-a-tool|comment-policy|donations)\.html$/.test(location.pathname);
+  if (NO_ADS) { try { (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1; } catch (e) {} doc.documentElement.classList.add('no-ads-page'); }
   var PATH = location.pathname.replace(/\/+$/, '') || '/';
 
   /* ---------- small helpers ---------- */
@@ -468,6 +472,7 @@
     entries.forEach(function (e) { if (e.isIntersecting) { adObserver.unobserve(e.target); fillAd(e.target); } });
   }, { rootMargin: '600px 0px' }) : null;
   function adSlot(kind, slotId) {
+    if (NO_ADS) return null;
     if (!C.adClient || !slotId) return null;
     var d = el('div', { 'class': 'ad-slot ' + kind, 'data-slot': slotId, 'data-kind': kind });
     if (adsBlocked) return pickFor(kind) || d;   // .no-ads hides d
@@ -556,6 +561,7 @@
   var picksMax = C.picksMax == null ? 3 : C.picksMax, picksShown = 0, picksInText = 0;
   var pickTurn = Math.floor(Math.random() * Math.max(picks.length, 1));   // each page starts on a different card
   function pickCard(where) {
+    if (NO_ADS) return null;
     // each card at most once on a page
     if (!picks.length || picksShown >= Math.min(picksMax, picks.length)) return null;
     var card = picks[pickTurn++ % picks.length].cloneNode(true);
