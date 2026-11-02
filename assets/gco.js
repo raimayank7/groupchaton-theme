@@ -544,7 +544,9 @@
       ['groupchaton.com', 'https://www.groupchaton.com/', 'https://assets.groupchaton.com/assets/brand/favicon-192.png', 'GroupChatOn Novels',
        'Read Korean web novels free', '2,000+ proofread chapters, like Trash of the Count’s Family, with new chapters every week.', 'Start reading'],
       ['share.groupchaton.com', 'https://share.groupchaton.com/', 'https://share.groupchaton.com/brand/favicon-192.png', 'Share',
-       'Find WhatsApp groups by topic', '2,400+ groups and channels, each with its own page, safety tips and a report button.', 'Browse groups']
+       'Find WhatsApp groups by topic', '2,400+ groups and channels, each with its own page, safety tips and a report button.', 'Browse groups'],
+      ['toolkit.groupchaton.com', 'https://toolkit.groupchaton.com/', 'https://toolkit.groupchaton.com/brand/favicon-192.png', 'Toolkit',
+       'Free Excel & Word templates for work', 'GST invoice, stock register, attendance, salary slip and more, plus online tools that print or download in a click.', 'Open Toolkit']
     ];
     FAMILY.forEach(function (f) {
       if (f[0] === host) return;
