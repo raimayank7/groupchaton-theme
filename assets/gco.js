@@ -858,7 +858,73 @@
   if (body.classList.contains('is-page')) {
     var end = adSlot('ad-end', A.end);
     if (end && article) article.appendChild(end);
-    if (/\/p\/contact/.test(PATH)) body.classList.add('is-contact');
+    if (/\/p\/contact/.test(PATH)) { body.classList.add('is-contact'); contactFor(); }
+  }
+
+  /* ---------- Contact page knows which GroupChatOn site sent the visitor ----------
+     Links from the other sites add ?from=<site> (and optional &page=<link>); without it the referrer's host decides.
+     The form then shows that site's topics and tips, and the message starts with "[Site] Topic" so the email says where it came from. */
+  function contactFor() {
+    var form = $('.gco-contact');
+    if (!form) return;
+    var SITES = {
+      www: { name: 'GroupChatOn novels', topics: ['General question', 'Mistake in a chapter', 'Request a novel', 'Copyright request', 'Something else'],
+        tips: ['The novel and chapter, or the page link', 'What is wrong, or what you would like'], ph: 'Write your message here.' },
+      infinity: { name: 'Infinity free tools', topics: ['Ask for a new tool', 'A tool is not working', 'Wrong result in a tool', 'Something else'],
+        tips: ['The tool name or its link', 'What you did and what you expected', 'Your device and browser, e.g. Android phone, Chrome', 'The exact message, if one appeared'],
+        ph: 'e.g. The Merge PDF tool stops at 50% with my 20 MB file.' },
+      help: { name: 'GroupChatOn Help', topics: ['A free tool', 'WhatsApp help', 'Reading a novel', 'Comments', 'Share', 'DeskOrg', 'Something else'],
+        tips: ['The help article or tool link', 'What you tried and what happened', 'Your device and browser', 'The exact message, if one appeared'],
+        ph: 'Tell us what went wrong and what you already tried.' },
+      toolkit: { name: 'Toolkit (Excel and Word templates)', topics: ['Request a template', 'Mistake in a file', 'Online tool problem', 'Feedback', 'Something else'],
+        tips: ['The file or tool name, e.g. GST Invoice Register', 'The sheet and cell, if a formula looks wrong', 'What the template you need should do'],
+        ph: 'e.g. Please add a monthly rent register for 10 tenants.' },
+      share: { name: 'Share (WhatsApp group directory)', topics: ['Report a group', 'Change or remove my listing', 'Problem adding a group', 'Something else'],
+        tips: ['The group page link on share.groupchaton.com', 'What is wrong with it', 'For your own listing: the group name you used'],
+        ph: 'Paste the group page link and tell us what is wrong.' },
+      app: { name: 'GroupChatOn app', topics: ['App not working', 'Problem reading a chapter', 'Request a novel', 'Something else'],
+        tips: ['Your phone or computer and browser', 'The novel and chapter, if it is about one', 'What happened and what you expected'],
+        ph: 'Tell us what happened in the app.' }
+    };
+    var q = new URLSearchParams(location.search), from = (q.get('from') || '').toLowerCase();
+    if (!SITES[from]) {
+      var host = ''; try { host = new URL(doc.referrer).hostname; } catch (e) {}
+      from = (/^(infinity|help|toolkit|share|app)\.groupchaton\.com$/.exec(host) || [])[1] || 'www';
+    }
+    var page = q.get('page') || '';
+    if (!/^https:\/\/([a-z0-9-]+\.)*groupchaton\.com\//i.test(page)) page = '';   // only our own pages go into the email
+
+    var siteSel = el('select', { id: 'cf-site' }), topicSel = el('select', { id: 'cf-topic' }), tips = el('ul', { 'class': 'cf-tips' });
+    Object.keys(SITES).forEach(function (k) { siteSel.appendChild(el('option', { value: k, text: SITES[k].name })); });
+    siteSel.value = from;
+    var msg = $('.contact-form-email-message', form);
+    function fill() {
+      var s = SITES[siteSel.value];
+      topicSel.innerHTML = '';
+      s.topics.forEach(function (t) { topicSel.appendChild(el('option', { text: t })); });
+      tips.innerHTML = '';
+      s.tips.forEach(function (t) { tips.appendChild(el('li', { text: t })); });
+      if (msg) msg.placeholder = s.ph;
+      var cards = $('.page-cards');   // the novel cards (report a mistake, request a novel) only fit the novels site
+      if (cards) cards.hidden = siteSel.value !== 'www' && siteSel.value !== 'app';
+    }
+    siteSel.addEventListener('change', fill);
+    var box = el('div', { 'class': 'cf-about' }, [
+      el('label', {}, [el('span', { text: 'Which site is this about?' }), siteSel]),
+      el('label', {}, [el('span', { text: 'What is it about?' }), topicSel]),
+      el('p', { 'class': 'cf-tips-h', text: 'Help us answer faster: include' }), tips]);
+    form.insertBefore(box, form.firstChild);
+    fill();
+    if (from !== 'www') { var h2 = $('.gco-page h2'); if (h2) h2.textContent = 'Send us a message about ' + SITES[from].name.replace(/ \(.*\)$/, ''); }
+
+    // a real click on Send (not the popups' scripted click) puts "[Site] Topic" and the page link at the top of the message
+    doc.addEventListener('click', function (e) {
+      if (!e.isTrusted || !msg || !e.target.closest || !e.target.closest('.gco-contact .contact-form-button-submit')) return;
+      var text = msg.value.replace(/^\[[^\]\n]+\][^\n]*\n(Page: [^\n]*\n)?\n?/, '');
+      if (!text.trim()) return;   // let Blogger show its own "message required" error
+      var site = SITES[siteSel.value].name.replace(/ \(.*\)$/, '');
+      msg.value = '[' + site + '] ' + topicSel.value + '\n' + (page ? 'Page: ' + page + '\n' : '') + '\n' + text;
+    }, true);
   }
 
   /* ---------- tidy the old chapter markup ---------- */
