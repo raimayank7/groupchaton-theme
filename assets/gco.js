@@ -489,13 +489,28 @@
     if (kind !== 'in-article' && kind !== 'multiplex') ins.setAttribute('data-full-width-responsive', 'false');
     ins.style.display = 'block';
     d.appendChild(ins);
-    // when Google has no ad for it, a sponsored card takes the slot, or it collapses (older browsers lack CSS :has)
+    // when Google has no ad for it ('unfilled', or 'unfill-optimized'), a sponsored card takes the slot, or it collapses
+    var settled = false;
+    function empty() { if (settled) return; settled = true; if (!pickInto(d)) d.classList.add('is-empty'); }
     if (window.MutationObserver) new MutationObserver(function (m, o) {
       var st = ins.getAttribute('data-ad-status');
-      if (st === 'unfilled') { if (!pickInto(d)) d.classList.add('is-empty'); o.disconnect(); }
-      else if (st === 'filled') o.disconnect();
+      if (/^unfill/.test(st || '')) { empty(); o.disconnect(); }
+      else if (st === 'filled') { settled = true; o.disconnect(); }
     }).observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+    // no real ad after 8 s (ad blocker with a fake ad script, filtered or slow network): the card takes the space
+    setTimeout(function () { if (!settled && ins.getAttribute('data-ad-status') !== 'filled') empty(); }, 8000);
+  }
+  /* ad blockers: a bait box with ad-like names; hidden or gone = blocked. Some blockers (uBlock Origin) swap Google's
+     script for a stub that claims loaded=true, so adsbygoogle.loaded alone is not enough. */
+  function adsLookBlocked() {
+    if (!(window.adsbygoogle && window.adsbygoogle.loaded)) return true;
+    var b = el('div', { 'class': 'adsbox ad-banner ad-label ad-wide', style: 'position:absolute;left:-9999px;top:0;width:1px;height:1px' });
+    b.innerHTML = '&nbsp;';
+    body.appendChild(b);
+    var cs = getComputedStyle(b), hid = !b.offsetParent || !b.offsetHeight || cs.display === 'none' || cs.visibility === 'hidden';
+    b.parentNode.removeChild(b);
+    return hid;
   }
   // a bottom anchor ad (AdSense Auto ads) adds .has-anchor so nothing important hides under it
   if (C.adClient) {
@@ -1297,6 +1312,7 @@
     }
     var homeAd = adSlot('ad-end', A.home);
     var slot = $('#home-ad');
+    if (slot) slot.id = 'home-pk';   // ad blockers hide #home-ad, and with it the sponsored card that may take this space
     if (homeAd && slot) slot.appendChild(homeAd);
   }
 
@@ -1342,8 +1358,7 @@
   window.addEventListener('load', function () {
     if (!C.adClient) return;
     setTimeout(function () {
-      var ok = window.adsbygoogle && window.adsbygoogle.loaded;
-      if (ok) return;
+      if (!adsLookBlocked()) return;
       html.classList.add('no-ads');   // ads blocked: close up the empty ad boxes, sponsored cards take some of them
       adsBlocked = true;
       $$('.ad-slot').forEach(pickInto);
