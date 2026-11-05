@@ -572,6 +572,17 @@
         '<a class="cta-btn" href="' + f[1] + '" rel="noopener" target="_blank">' + f[6] + ' ↗</a><small>' + f[0].replace(/^groupchaton/, 'www.groupchaton') + '</small>';
       picks.push(d);
     });
+    /* Website designs by Nivesh Sahayak (owner, 2026-11-05): India only (prices in rupees, Indian WhatsApp) */
+    var inIndia = false;
+    try { inIndia = /^Asia\/(Kolkata|Calcutta)$/.test(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) {}
+    if (inIndia) {
+      var w = doc.createElement('div');
+      w.setAttribute('data-label', 'From Nivesh Sahayak');
+      w.innerHTML = '<a class="promo-ic is-mark" href="https://designs.niveshsahayak.in/" rel="noopener" target="_blank" aria-label="Website designs"><img src="https://designs.niveshsahayak.in/icons/apple-touch-icon.png" alt="" width="72" height="72" loading="lazy"></a>' +
+        '<b class="promo-title">Need a website for your business?</b><span class="promo-line">See live website designs for shops, clinics, CA firms and more. Made for your business from ₹1,000.</span>' +
+        '<a class="cta-btn" href="https://designs.niveshsahayak.in/" rel="noopener" target="_blank">See the designs ↗</a><small>designs.niveshsahayak.in</small>';
+      picks.push(w);
+    }
   })();
   // ad blockers hide well-known names like promo-banner and cta-btn, so the cards are renamed
   var PICK_CLASS = { 'promo-banner': 'pk-img', 'promo-ic': 'pk-ic', 'promo-title': 'pk-title', 'promo-line': 'pk-line', 'cta-btn': 'pk-btn' };
