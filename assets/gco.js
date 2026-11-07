@@ -1452,7 +1452,7 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add); else add();
 })();
-/* Menu: "Get the app" opens the GroupChatOn app (app.groupchaton.com, installable). On a chapter it opens that chapter there. */
+/* Menu: "Get the app" opens the GroupChatOn app (novel.groupchaton.com, installable). On a chapter it opens that chapter there. */
 ;(function () {
   function add() {
     var nav = document.getElementById('nav');
@@ -1460,7 +1460,7 @@
     var m = location.pathname.match(/^\/(\d{4}\/\d{2}\/[\w.-]+)\.html$/);
     var a = document.createElement('a');
     a.className = 'nav-app';
-    a.href = 'https://app.groupchaton.com/' + (m ? 'read/' + m[1] + '/' : '');
+    a.href = 'https://novel.groupchaton.com/' + (m ? 'read/' + m[1] + '/' : '');
     a.title = 'Install the GroupChatOn app: follow novels, continue where you stopped, read offline';
     a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:17px;height:17px;vertical-align:-3px;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round">' +
       '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/></svg>Get the app';
