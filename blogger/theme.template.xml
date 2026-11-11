@@ -15,14 +15,38 @@
   <meta charset='utf-8'/>
   <meta content='width=device-width, initial-scale=1, viewport-fit=cover' name='viewport'/>
   <meta content='#fbfaf7' name='theme-color'/>
+  <!-- Share preview (WhatsApp, Facebook, X): the branded banner (assets/brand/share-banner.jpg, made from scripts/share-banner.html).
+       It goes before Blogger's own tags so the apps pick it first. Chapters with their own picture keep it. -->
+  <b:if cond='data:view.isHomepage or data:view.isPage or !data:view.featuredImage'>
+  <meta content='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/share-banner.jpg' property='og:image'/>
+  <meta content='1200' property='og:image:width'/>
+  <meta content='630' property='og:image:height'/>
+  <meta content='GroupChatOn: Korean web novels, proofread in English' property='og:image:alt'/>
+  <meta content='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/share-banner.jpg' name='twitter:image'/>
+  </b:if>
   <b:include data='blog' name='all-head-content'/>
+  <!-- SEO: descriptions for pages with no "Search description" of their own in Blogger.
+       (On those pages Blogger passes the blog's description through, so "has no description" can't be tested; they are matched by title.)
+       EDIT: if you give one of these pages a Search description in Blogger, delete its line here. -->
+  <b:if cond='data:view.isPage'>
+  <b:if cond='data:view.title == "About Us"'><meta content='GroupChatOn is a fan-run site publishing carefully proofread English chapters of Korean web novels, free to read in a clean, comfortable layout.' name='description'/>
+  <b:elseif cond='data:view.title == "Contact Us"'/><meta content='Contact GroupChatOn: report a typo in a chapter, request a Korean web novel, get new chapter alerts or send us a message. We read every one.' name='description'/>
+  <b:elseif cond='data:view.title == "Password Generator"'/><meta content='Free password generator: create strong random passwords or easy-to-type passphrases. It runs on your device, so nothing is ever sent or saved.' name='description'/>
+  <b:elseif cond='data:view.title == "Case Converter"'/><meta content='Free case converter: switch text to UPPER CASE, lower case, Title Case or Sentence case in one click, then copy it. No sign-up needed.' name='description'/>
+  <b:elseif cond='data:view.title == "Word Counter"'/><meta content='Free word counter: count words, characters, sentences and paragraphs as you type, with reading time, speaking time and your most-used words.' name='description'/>
+  <b:elseif cond='data:view.title == "PDF Organizer"'/><meta content='Free PDF organizer: rotate, delete and reorder PDF pages, then save the new file. It works in your browser, so your files never leave your device.' name='description'/>
+  <b:elseif cond='data:view.title == "Image Compressor"'/><meta content='Free image compressor: shrink JPG, PNG and WebP photos for WhatsApp, email and online forms with no visible loss in quality. No sign-up.' name='description'/>
+  <b:elseif cond='data:view.title == "URL Shortener"'/><meta content='Free URL shortener: turn a long link into a short v.gd link with an optional custom ending. No sign-up, and short links never expire.' name='description'/>
+  <b:elseif cond='data:view.title == "GroupConnectHub"'/><meta content='Looking for WhatsApp groups to join? Group links from GroupChatOn have moved to our sister site ShareYourGroup. Browse and join groups there.' name='description'/>
+  </b:if>
+  </b:if>
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/favicon.ico' rel='icon' sizes='any'/>
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/favicon-192.png' rel='icon' sizes='192x192' type='image/png'/>
   <link href='https://YOUR-GITHUB-USER.github.io/YOUR-REPO/assets/brand/apple-touch-icon.png' rel='apple-touch-icon'/>
   <title><b:if cond='data:view.isHomepage'><data:blog.title.escaped/> &#8212; Korean Web Novels, Proofread in English<b:elseif cond='data:view.isError'/>Page Not Found | <data:blog.title.escaped/><b:elseif cond='data:view.isLabelSearch'/><data:view.search.label.escaped/> Novels and Chapters | <data:blog.title.escaped/><b:elseif cond='data:view.isSearch and data:view.search.query'/>Search: <data:view.search.query.escaped/> | <data:blog.title.escaped/><b:elseif cond='data:view.isMultipleItems'/>All Chapters | <data:blog.title.escaped/><b:else/><data:view.title.escaped/> | <data:blog.title.escaped/></b:if></title>
   <meta content='summary_large_image' name='twitter:card'/>
-  <!-- SEO: Blogger's all-head-content above already gives canonical, description, og:title, og:url,
-       og:description and og:image. These add the rest, using only data proven on this blog.
+  <!-- SEO: Blogger's all-head-content above already gives canonical, og:title, og:url and og:description
+       (descriptions and the share image are handled above). These add the rest, using only data proven on this blog.
        gco.js adds structured data (chapters, novels, breadcrumbs) and fuller chapter titles. -->
   <meta content='GroupChatOn' property='og:site_name'/>
   <meta content='en_US' property='og:locale'/>
@@ -127,8 +151,8 @@ body#layout .section{margin:0 0 12px}
       <a href='/#novels'>Novels</a>
       <a href='/#latest'>Latest</a>
       <a href='https://whatsapp.com/channel/YOUR-CHANNEL' rel='noopener' target='_blank'>Updates</a>
-      <a href='https://infinity.groupchaton.com/'>Tools</a>
-      <a href='https://help.groupchaton.com/'>Help</a>
+      <a href='https://infinity.your-domain.com/'>Tools</a>
+      <a href='https://help.your-domain.com/'>Help</a>
       <a href='/p/donations.html'>Support us</a>
       <a href='/p/contact-us.html'>Contact</a>
     </nav>
@@ -281,8 +305,8 @@ body#layout .section{margin:0 0 12px}
           <li><a href='/p/about-us.html'>About us</a></li>
           <li><a href='/p/donations.html'>Support us</a></li>
           <li><a href='https://www.trustpilot.com/review/your-domain.com' rel='noopener' target='_blank'>Review us on Trustpilot</a></li>
-          <li><a href='https://infinity.groupchaton.com/'>Free tools</a></li>
-          <li><a href='https://help.groupchaton.com/'>Help centre</a></li>
+          <li><a href='https://infinity.your-domain.com/'>Free tools</a></li>
+          <li><a href='https://help.your-domain.com/'>Help centre</a></li>
           <li><a href='/p/contact-us.html'>Contact us</a></li>
           <li><a href='/p/privacy-policy.html'>Privacy policy</a></li>
           <li><a href='/p/disclaimer.html'>Disclaimer</a></li>
@@ -344,6 +368,8 @@ body#layout .section{margin:0 0 12px}
 <script>
 //<![CDATA[
 window.GCO = {
+  /* EDIT: personal ids used inside pages that load from GitHub (kept out of the public repo) */
+  ids: { kofi: '' },
   /* EDIT: where gco.css, gco.js and the chapter lists live (GitHub Pages) */
   base: 'https://YOUR-GITHUB-USER.github.io/YOUR-REPO/',
   /* EDIT: your AdSense publisher id and ad unit ids (empty '' = no slot there) */
